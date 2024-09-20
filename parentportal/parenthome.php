@@ -1,3 +1,22 @@
+<?php
+
+session_start();
+
+require("../server/connection.php");
+
+if(isset($_SESSION["logged_in"])){
+    if(isset($_SESSION["firstname"]) || isset($_SESSION["email"])){
+        $textaccount = $_SESSION["firstname"];
+        $useremail = $_SESSION["email"];
+    }else{
+        $textaccount = "Account";
+    }
+}else{
+    $textaccount = "Account";
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +26,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body>
+<body style="background-color: #424d21;">
     <nav class="navbar" style="background-color: #708238;">
         <a class="navbar-brand" style="color: #708238;">Navbar</a>
           <div class="d-flex me-5">
@@ -17,20 +36,16 @@
         </div>
     </nav>
 
-    <nav class="navbar bg-white">
-        <div class="container-fluid d-flex justify-content-center">
-          <a class="navbar-brand mb-0 fs-3" href="home.html">Bayanan Elementary School Main</a>
-        </div>
-    </nav>
-
-    <nav class="navbar navbar-expand-lg bg-white py-3">
+    <nav class="navbar navbar-expand-lg py-3 bg-white">
         <div class="container-fluid">
-          <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarNavDropdown">
-            <ul class="navbar-nav grid gap-5">
+            <img src="../img/logo.jpg" alt="BESMAIN" style="height: 7vh;" class="mx-3">
+            <a class="navbar-brand " href="parenthome.php">Bayanan Elementary School Main</a>
+          <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNavDropdown">
+            <ul class="navbar-nav grid gap-3">
 
-                <!-- HOME -->
+              <!-- HOME -->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="home.html">Home</a>
+                <a class="nav-link" aria-current="page" href="parenthome.php">Home</a>
               </li>
 
               <!-- ABOUT -->
@@ -40,55 +55,50 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="visionmission.html">Vision and Mission</a></li>
+                  <li><a class="dropdown-item" href="hymn.html">BES Hymn</a></li>
                   <li><a class="dropdown-item" href="history.html">History</a></li>
                   <li><a class="dropdown-item" href="contacts.html">Contacts and Directory</a></li>
                   <li><a class="dropdown-item" href="board.html">Board of Regents</a></li>
                 </ul>
               </li>
 
-              <!-- LIFE@BES -->
+              <!-- e-Consultation-->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Life@BES
+                e-Consultation
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="hymn.html">BES Hymn</a></li>
+                  <li><a class="dropdown-item" href="parentconsult.php">Consult a Teacher</a></li>
                   <li><a class="dropdown-item" href="facilities.html">Facilities</a></li>
                 </ul>
               </li>
 
-              <!-- ADMINISTRATION-->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Administration
+              <!-- GRADES -->
+              <li class="nav-item">
+                <a class="nav-link" href="parentstudentgrades.php">
+                  Student Grades
                 </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="hymn.html">BES Hymn</a></li>
-                  <li><a class="dropdown-item" href="facilities.html">Facilities</a></li>
-                </ul>
               </li>
 
-              <!-- ADMISSION -->
+              <!-- OTHER SERVICES -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Admission
+                  Other Services
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="application.php">Application</a></li>
-                  <li><a class="dropdown-item" href="curriculum.html">Curriculum Overview</a></li>
+                  <li><a class="dropdown-item" href="parentpta.php">PTA</a></li>
+                  <li><a class="dropdown-item" href="parentaccmgt.php">Account Management</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item">Logged in as:</a></li>
+                  <li><a class="dropdown-item"><?php echo $useremail; ?></a></li>
                 </ul>
               </li>
-
-              <!-- SERVICES -->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Services
+              
+              <!-- LOGOUT -->
+              <li class="nav-item me-3">
+                <a class="nav-link" href="../logout.php" role="button">
+                  Logout
                 </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="studentportal/studentportal.php">Student Portal</a></li>
-                  <li><a class="dropdown-item" href="parentportal/parentportal.php">Parent Portal</a></li>
-                  <li><a class="dropdown-item" href="facultyportal/facultyportal.php">Faculty Portal</a></li>
-                </ul>
               </li>
               
             </ul>
@@ -96,15 +106,13 @@
         </div>
       </nav>
 
-      <!-- Image -->
-      <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="img/teachers.png" class="d-block w-100" alt="BESMAIN">
-          </div>
-          </div>
-        </div>
+      <div style="background-color: #708238;">
+
       </div>
+
+      
+
+      
     
     <!-- Script -->  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
