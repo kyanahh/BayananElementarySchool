@@ -15,36 +15,6 @@ if(isset($_SESSION["logged_in"])){
     $textaccount = "Account";
 }
 
-$errorMessage = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $useremail = $_SESSION["email"];
-    $oldpass = $_POST["oldpass"];
-    $newpass = $_POST["newpass"];
-    $confirmnewpass = $_POST["confirmnewpass"];
-
-    // Fetch the current pin from the database
-    $result = $connection->query("SELECT pin FROM users WHERE email = '$useremail'");
-    $record = $result->fetch_assoc();
-    $stored_password = $record["pin"];
-
-    // Check if the old password matches
-    if ($oldpass == $stored_password) {
-        // Check if the new pin matches the confirmation pin
-        if ($newpass == $confirmnewpass) {
-            // Update the pin
-            $connection->query("UPDATE users SET pin = '$newpass' WHERE email = '$useremail'");
-            $errorMessage = "Password changed successfully";
-        } else {
-            // If new pins don't match
-            $errorMessage = "New PIN numbers do not match";
-        }
-    } else {
-        // If the old password doesn't match
-        $errorMessage = "Old PIN number does not match";
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -134,67 +104,74 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
       </nav>
 
-      <div class="w-100 justify-content-center d-flex">
-        <div class="card mt-3 col-sm-9">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
-                <li class="nav-item">
-                    <a class="nav-link text-black" href="parentaccmgt.php">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-black active" aria-current="true" href="parentchangepin.php">Change PIN</a>
-                </li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <!-- Settings -->
-                <div class="px-3 mt-2">
-                    <form method="POST" action="<?php htmlspecialchars("SELF_PHP"); ?>">
-                        <div class="row ms-2 mt-1">
-                            <h2 class="fs-5">Change/Update PIN</h2>
-                        </div>
-
-                        <div class="row mb-3 ms-2 mt-2">
-                            <div class="col-sm-2">
-                                <label class="form-label mt-2 px-3">Current PIN Number</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="password" class="form-control" name="oldpass" id="oldpass" required>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 ms-2 mt-2">
-                            <div class="col-sm-2">
-                                <label class="form-label mt-2 px-3">New PIN Number</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="password" class="form-control" name="newpass" id="newpass" required>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 ms-2 mt-2">
-                            <div class="col-sm-2">
-                                <label class="form-label mt-2 px-3">Confirm New PIN Number</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="password" class="form-control" name="confirmnewpass" id="confirmnewpass" required>
-                                <p class="text-danger"><?php echo $errorMessage ?></p>
-                            </div>
-                        </div>
-
-
-                        <div class="row mb-3 mt-2 ms-5 ps-5">
-                            <div class="ms-4">
-                                <button type="submit" class="btn btn-dark col-sm-4 ms-5">Save</button>
-                            </div>
-                        </div>
-                    </form>
-
-                </div>
-                <!-- End of Settings -->
-            </div>
+    <div class="container-fluid bg-image p-5 text-white" style="background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+      url('../img/besmain.png'); height: 30vh; background-repeat: no-repeat; 
+      background-position: center; background-size: cover; position: relative;">
+        <div class="content-container" style="position: absolute; bottom: 0; width: 100%;">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <h3 class="fw-bold text-white ms-5">BESMAIN Hymn</h3>
+                <ol class="breadcrumb ms-5">
+                    <li class="breadcrumb-item fw-bold">
+                        <a href="home.html" class="text-decoration-none text-white">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active text-white fw-bold" aria-current="page">BESMAIN Hymn</li>
+                </ol>
+            </nav>
         </div>
-      </div>
+    </div>
+
+    <div class="container-fluid mt-5 d-flex justify-content-center text-center">
+        <div class="card p-4 mx-5 col-sm-10">
+            <div class="container mt-4">
+                <h3 class="fw-bold">BESMAIN Hymn</h3>
+                <div class="ratio ratio-16x9">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/nlnwbhZAYao?si=a5WU2Fw2ueqCV9E9" 
+                    title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; 
+                    encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen></iframe>
+                </div>
+            </div>
+            <p class="mt-3">Paaralan naming minamahal</p>
+            <p>Naging ilaw at tanglaw</p>
+            <p>Sa buhay ko's naging gabay</p>
+            <p>Karunungan iyong ibinigay</p>
+            <p class="mt-3">Taas noo na haharapin</p>
+            <p>Ang hamon ng buhay</p>
+            <p>Itinuro ninyo sa amin</p>
+            <p>Hinding-hindi lilimutin</p>
+            <p class="mt-3">Paaralan naming minamahal</p>
+            <p>Naging ilaw at tanglaw</p>
+            <p>Sa buhay ko's naging gabay</p>
+            <p>Karunungan iyong ibinigay</p>
+            <p class="mt-3">Dadalhin ko habang buhay</p>
+            <p>Nang makamit ang tagumpay</p>
+            <p>Tunay na damdamin</p>
+            <p>Mahal ka namin <span class="text-danger fw-bold">BAYANAN MAIN</span></p>
+            <p class="mt-3">Paaralan naming minamahal</p>
+            <p>Naging ilaw at tanglaw</p>
+            <p>Sa buhay ko's naging gabay</p>
+            <p>Karunungan iyong ibinigay</p>
+            <p class="mt-3">Taas noo na haharapin</p>
+            <p>Ang hamon ng buhay</p>
+            <p>Itinuro ninyo sa amin</p>
+            <p>Hinding-hindi lilimutin</p>
+            <p class="mt-3">Paaralan naming minamahal</p>
+            <p>Naging ilaw at tanglaw</p>
+            <p>Sa buhay ko's naging gabay</p>
+            <p>Karunungan iyong ibinigay</p>
+            <p class="mt-3">Dadalhin ko habang buhay</p>
+            <p>Nang makamit ang tagumpay</p>
+            <p>Tunay na damdamin</p>
+            <p>Mahal ka namin <span class="text-danger fw-bold">BAYANAN MAIN</span></p>
+            <p class="mt-3">Mahal ka namin</p>
+            <p>Mahal ka namin</p>
+            <p>Mahal ka namin <span class="text-danger fw-bold">BAYANAN MAIN</span></p>
+            <p class="mt-3">Mahal ka namin</p>
+            <p>Mahal ka namin</p>
+            <p>Mahal ka namin <span class="text-danger fw-bold">BAYANAN MAIN</span></p>
+        </div>
+    </div>
 
     <hr class="mt-5">
     <footer>
@@ -205,9 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
         </div>
-    </footer>      
-
-      
+    </footer>
     
     <!-- Script -->  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

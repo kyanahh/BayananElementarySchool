@@ -1,3 +1,56 @@
+<?php
+
+$errorMessage = "";
+
+// Composer's autoload file
+require 'vendor/autoload.php'; // Adjust the path if necessary
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Create an instance of PHPMailer
+$mail = new PHPMailer(true);
+
+// Initialize variables
+$name = "";
+$email = "";
+$message = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get form data
+    $name = htmlspecialchars($_POST['name']);
+    $email = htmlspecialchars($_POST['email']);
+    $message = htmlspecialchars($_POST['message']);
+
+    try {
+        //Server settings
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP server
+        $mail->SMTPAuth = true;
+        $mail->Username = 'sumbongmagulang@gmail.com'; // Replace with your email
+        $mail->Password = 'nurm zexy krps rweo'; // Replace with your email password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
+        $mail->Port = 587;
+
+        //Recipients
+        $mail->setFrom($email, $name);
+        $mail->addAddress('sumbongmagulang@gmail.com', 'BESMAIN Website'); // Change as needed
+
+        //Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Inquiry Form Submission';
+        $mail->Body = "<strong>Name:</strong> $name<br>
+                       <strong>Email:</strong> $email<br><br>
+                       <strong>Message:</strong><br>$message";
+
+        $mail->send();
+        $errorMessage = 'Message has been sent';
+    } catch (Exception $e) {
+        $errorMessage = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,7 +116,7 @@
                   Administration
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="hymn.html">BESMAIN   Hymn</a></li>
+                  <li><a class="dropdown-item" href="hymn.html">BESMAIN Hymn</a></li>
                   <li><a class="dropdown-item" href="facilities.html">Facilities</a></li>
                 </ul>
               </li>
@@ -97,17 +150,17 @@
       </nav>
 
       <div class="container-fluid bg-image p-5 text-white" style="background-image: 
-      linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../bayanan/img/besmain.png'); 
-      height: 30vh; background-repeat: no-repeat; background-position: center; background-size: cover; 
-      position: relative;">
+      linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+      url('../bayanan/img/besmain.png'); height: 30vh; background-repeat: no-repeat; 
+      background-position: center; background-size: cover; position: relative;">
         <div class="content-container" style="position: absolute; bottom: 0; width: 100%;">
             <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                <h3 class="fw-bold text-white ms-5">Mission and Vision</h3>
+                <h3 class="fw-bold text-white ms-5">Contacts and Directory</h3>
                 <ol class="breadcrumb ms-5">
                     <li class="breadcrumb-item fw-bold">
                         <a href="home.html" class="text-decoration-none text-white">Home</a>
                     </li>
-                    <li class="breadcrumb-item active text-white fw-bold" aria-current="page">Mission and Vision</li>
+                    <li class="breadcrumb-item active text-white fw-bold" aria-current="page">Contacts and Directory</li>
                 </ol>
             </nav>
         </div>
@@ -115,14 +168,51 @@
     
     <div class="container-fluid mt-5 d-flex justify-content-center">
         <div class="card p-4 mx-5 col-sm-10">
-            <h4 class="fw-bold">Vision</h4>
-            <p>Bayanan Elementary School (Main) is a caring, dedicated, and child friendly institution of learning which is committed to produce literate, God-fearing, productive and well-disciplined graduates ready to face and solve life’s challenges.</p>
-            <h4 class="fw-bold mt-3">Mission</h4>
-            <p>The school endeavors to transform each child into a person capable of developing his optimum potential to prepare him for global competition.</p>
+          <h4 class="fw-bold">Contact Details</h4>
+          <div class="row">
+            <div class="col">
+              <p>Telephone Number:</p>
+              <p>8862 – 2199</p>
+              <p class="mt-2">Telfax Number:</p>
+              <p>8862 – 2199</p>
+            </div>
+            <div class="col">
+              <p>Address:</p>
+              <p>F.L.Navarro Ln, Bayanan, Muntinlupa, 1772 Metro Manila</p>
+              <p class="mt-2">Email Address:</p>
+              <a class="text-decoration-none" href="mailto:bayanan.esmain2016@gmail.com">bayanan.esmain2016@gmail.com</a>
+            </div>
+          </div>
+            <div class="card p-4 mt-3">
+              <h4 class="fw-bold">Inquiry Form</h4>
+                <form action="<?php htmlspecialchars("SELF_PHP"); ?>" method="POST">
+                  <div class="mb-3">
+                      <label for="name" class="form-label">Name</label>
+                      <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" required>
+                  </div>
+                  <div class="pb-3">
+                      <label for="message" class="form-label">Message</label>
+                      <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter message here.." required></textarea>
+                      <p class="text-danger"><?php echo $errorMessage ?></p>
+                  </div>
+                  <button type="submit" class="btn btn-primary px-4">Submit</button>
+                </form>
+            </div>
+            <h4 class="fw-bold mt-3">Map</h4>
+            <div class="container mt-4">
+                <div class="ratio ratio-16x9">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3054.2582417036324!2d121.04271338517454!3d14.406036819149588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397d0457e9d9b4f%3A0xb55fa7af84f799cc!2sBayanan%20Elementary%20School%20-%20Main!5e1!3m2!1sen!2sph!4v1727124998585!5m2!1sen!2sph" 
+                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+            
         </div>
     </div>
-
-
 
     <hr class="mt-5">
     <footer>

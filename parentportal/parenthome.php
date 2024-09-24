@@ -54,11 +54,10 @@ if(isset($_SESSION["logged_in"])){
                   About
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="visionmission.html">Vision and Mission</a></li>
-                  <li><a class="dropdown-item" href="hymn.html">BES Hymn</a></li>
-                  <li><a class="dropdown-item" href="history.html">History</a></li>
-                  <li><a class="dropdown-item" href="contacts.html">Contacts and Directory</a></li>
-                  <li><a class="dropdown-item" href="board.html">Board of Regents</a></li>
+                  <li><a class="dropdown-item" href="parentvisionmission.php">Vision and Mission</a></li>
+                  <li><a class="dropdown-item" href="parenthymn.php">BESMAIN Hymn</a></li>
+                  <li><a class="dropdown-item" href="parenthistory.php">History</a></li>
+                  <li><a class="dropdown-item" href="parentcontacts.php">Contacts and Directory</a></li>
                 </ul>
               </li>
 
@@ -69,7 +68,6 @@ if(isset($_SESSION["logged_in"])){
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="parentconsult.php">Consult a Teacher</a></li>
-                  <li><a class="dropdown-item" href="facilities.html">Facilities</a></li>
                 </ul>
               </li>
 
@@ -106,14 +104,22 @@ if(isset($_SESSION["logged_in"])){
         </div>
       </nav>
 
-      <div style="background-color: #708238;">
+      <div>
 
       </div>
 
-      
+    <hr class="mt-5">
+    <footer>
+        <div class="container-fluid row m-2 text-white">
 
-      
-    
+            <div class="col-md-6">
+                <p>Copyright &copy; 2024 Bayanan Elementary School Main</p>
+            </div>
+
+        </div>
+    </footer>
+
+
     <!-- Script -->  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
