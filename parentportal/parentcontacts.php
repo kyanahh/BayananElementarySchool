@@ -22,6 +22,11 @@ require '../vendor/autoload.php'; // Adjust the path if necessary
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+require 'PHPMailer/src/Exception.php';
 
 // Create an instance of PHPMailer
 $mail = new PHPMailer(true);
