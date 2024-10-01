@@ -5,8 +5,13 @@ $errorMessage = "";
 // Composer's autoload file
 require 'vendor/autoload.php'; // Adjust the path if necessary
 
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+require 'PHPMailer/src/Exception.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 // Create an instance of PHPMailer
 $mail = new PHPMailer(true);
