@@ -127,8 +127,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   Admission
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="application.php">Application</a></li>
-                  <li><a class="dropdown-item" href="curriculum.html">Curriculum Overview</a></li>
+                  <li><a class="dropdown-item" href="admission/application.php">Application</a></li>
+                  <li><a class="dropdown-item" href="https://www.deped.gov.ph/matatagcurriculumk147/">Curriculum Overview</a></li>
                 </ul>
               </li>
 
