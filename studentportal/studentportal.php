@@ -1,3 +1,65 @@
+<?php
+
+session_start();
+
+require("../server/connection.php");
+
+$errorMessage = "";
+
+if (isset($_POST["studentnumber"]) && isset($_POST["password"])) {
+    $studentnumber = $_POST["studentnumber"];
+    $password = $_POST["password"];
+
+    $result = $connection->query("SELECT users.*, gender.gendertype as gender, 
+    civilstatus.civilstats as cs, usertype.usertypename as usertypename, users.usertypeid as typeid 
+    FROM (((users INNER JOIN gender on users.genderid = gender.genderid) 
+    INNER JOIN civilstatus on users.civilstatus = civilstatus.statusid) 
+    INNER JOIN usertype on users.usertypeid = usertype.usertypeid) 
+    WHERE users.userid = '$studentnumber' AND users.pin = '$password' AND users.usertypeid = 3");
+
+    if ($result->num_rows === 1) {
+        $record = $result->fetch_assoc();
+
+        // Fetch the usertypeid for the user
+        $usertypeid = $record["typeid"];
+
+        // Set session variables
+        $_SESSION["userid"] = $record["userid"];
+        $_SESSION["firstname"] = $record["firstname"];
+        $_SESSION["middlename"] = $record["middlename"];
+        $_SESSION["lastname"] = $record["lastname"];
+        $_SESSION["suffix"] = $record["suffix"];
+        $_SESSION["gender"] = $record["gender"];
+        $_SESSION["bday"] = $record["bday"];
+        $_SESSION["birthplace"] = $record["birthplace"];
+        $_SESSION["cs"] = $record["cs"];
+        $_SESSION["citizenship"] = $record["citizenship"];
+        $_SESSION["phone"] = $record["phone"];
+        $_SESSION["email"] = $record["email"];
+        $_SESSION["address"] = $record["address"];
+        $_SESSION["curriculum"] = $record["curriculum"];
+        $_SESSION["usertypename"] = $record["usertypename"];
+        $_SESSION["logged_in"] = true;
+
+        $userid = $record["userid"];
+        $logtime = date("Y-m-d H:i:s");
+        $connection->query("INSERT INTO userlogs (logtime, userid) VALUES ('$logtime', '$userid')");
+
+        // Redirect users based on usertypeid
+        if ($usertypeid == 3) {
+            header("Location: studenthome.php");
+            exit();  // Always use exit after a header redirection
+        } else {
+            $errorMessage = "You are not authorized to access this portal.";
+        }
+
+    } else {
+        $errorMessage = "Incorrect email or password";
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
