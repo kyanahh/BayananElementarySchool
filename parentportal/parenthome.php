@@ -48,16 +48,13 @@ if(isset($_SESSION["logged_in"])){
                 <a class="nav-link" aria-current="page" href="parenthome.php">Home</a>
               </li>
 
-              <!-- ABOUT -->
+              <!-- e-Consultation-->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  About
+                e-Consultation
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="parentvisionmission.php">Vision and Mission</a></li>
-                  <li><a class="dropdown-item" href="parenthymn.php">BESMAIN Hymn</a></li>
-                  <li><a class="dropdown-item" href="parenthistory.php">History</a></li>
-                  <li><a class="dropdown-item" href="parentcontacts.php">Contacts and Directory</a></li>
+                  <li><a class="dropdown-item" href="parentconsult.php">Consult a Teacher</a></li>
                 </ul>
               </li>
 
