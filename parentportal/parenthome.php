@@ -61,16 +61,6 @@ if(isset($_SESSION["logged_in"])){
                 </ul>
               </li>
 
-              <!-- e-Consultation-->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                e-Consultation
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="parentconsult.php">Consult a Teacher</a></li>
-                </ul>
-              </li>
-
               <!-- GRADES -->
               <li class="nav-item">
                 <a class="nav-link" href="parentstudentgrades.php">

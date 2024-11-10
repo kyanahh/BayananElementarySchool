@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <li><a class="dropdown-item" href="visionmission.html">Vision and Mission</a></li>
                   <li><a class="dropdown-item" href="history.html">History</a></li>
                   <li><a class="dropdown-item" href="contacts.php">Contacts and Directory</a></li>
-                  <li><a class="dropdown-item" href="board.html">Board of Regents</a></li>
+                  <li><a class="dropdown-item" href="#">Board of Regents</a></li>
                 </ul>
               </li>
 
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="hymn.html">BESMAIN Hymn</a></li>
-                  <li><a class="dropdown-item" href="facilities.html">Facilities</a></li>
+                  <li><a class="dropdown-item" href="#">Facilities</a></li>
                 </ul>
               </li>
 
@@ -121,8 +121,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   Administration
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="hymn.html">BESMAIN Hymn</a></li>
-                  <li><a class="dropdown-item" href="facilities.html">Facilities</a></li>
                 </ul>
               </li>
 
