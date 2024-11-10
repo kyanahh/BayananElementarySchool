@@ -144,6 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <li><a class="dropdown-item" href="studentportal/studentportal.php">Student Portal</a></li>
                   <li><a class="dropdown-item" href="parentportal/parentportal.php">Parent Portal</a></li>
                   <li><a class="dropdown-item" href="facultyportal/facultyportal.php">Faculty Portal</a></li>
+                  <li><a class="dropdown-item" href="admin/adminportal.php">Admin Portal</a></li>
                 </ul>
               </li>
               
