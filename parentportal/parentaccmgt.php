@@ -61,6 +61,13 @@ if(isset($_SESSION["logged_in"])){
                 <a class="nav-link" aria-current="page" href="parenthome.php">Home</a>
               </li>
 
+              <!-- GRADES -->
+              <li class="nav-item">
+                <a class="nav-link" href="parentstudentgrades.php">
+                  Student Grades
+                </a>
+              </li>
+
               <!-- e-Consultation-->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -69,13 +76,6 @@ if(isset($_SESSION["logged_in"])){
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="parentconsult.php">Consult a Teacher</a></li>
                 </ul>
-              </li>
-
-              <!-- GRADES -->
-              <li class="nav-item">
-                <a class="nav-link" href="parentstudentgrades.php">
-                  Student Grades
-                </a>
               </li>
 
               <!-- OTHER SERVICES -->
