@@ -16,39 +16,55 @@ if (isset($_SESSION["logged_in"])) {
     $textaccount = "Account";
 }
 
-// Get faculty ID from URL
-$facultyId = isset($_GET['id']) ? intval($_GET['id']) : 0;
-$errorMessage = "";
+$firstname = $middlename = $lastname = $suffix = $bday = $birthplace = $address = $gender = 
+$civilstatus = $citizenship = $phone =  $email = $password = $curriculum = $errorMessage = 
+$successMessage = "";
 
-// Retrieve faculty information from the database
-if ($facultyId > 0) {
-    $query = "SELECT * FROM users WHERE userid = ?";
-    $stmt = $connection->prepare($query);
-    $stmt->bind_param("i", $facultyId);
-    $stmt->execute();
-    $result = $stmt->get_result();
+$usertype = 1;
 
-    if ($result->num_rows > 0) {
-        // Fetch faculty data
-        $facultyData = $result->fetch_assoc();
-        $firstname = $facultyData['firstname'];
-        $lastname = $facultyData['lastname'];
-        $middlename = $facultyData['middlename'];
-        $gender = $facultyData['genderid'];
-        $civilstatus = $facultyData['civilstatus'];
-        $citizenship = $facultyData['citizenship'];
-        $suffix = $facultyData['suffix'];
-        $phone = $facultyData['phone'];
-        $bday = $facultyData['bday'];
-        $email = $facultyData['email'];
-        $birthplace = $facultyData['birthplace'];
-        $address = $facultyData['address'];
-        $curriculum = $facultyData['curriculum'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $firstname =  ucwords($_POST["firstname"]);
+    $middlename =  ucwords($_POST["middlename"]);
+    $lastname =  ucwords($_POST["lastname"]);
+    $suffix =  ucwords($_POST["suffix"]);
+    $bday = $_POST["bday"];
+    $birthplace =  ucwords($_POST["birthplace"]);
+    $address =  ucwords($_POST["address"]);
+    $gender = $_POST["gender"];
+    $civilstatus = $_POST["civilstatus"];
+    $citizenship =  ucwords($_POST["citizenship"]);
+    $phone = $_POST["phone"];
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $curriculum =  ucwords($_POST["curriculum"]);
+
+    // Check if the email already exists in the database
+    $emailExistsQuery = "SELECT * FROM users WHERE email = '$email'";
+    $emailExistsResult = $connection->query($emailExistsQuery);
+
+    if ($emailExistsResult->num_rows > 0) {
+        $errorMessage = "User already exists";
+        $firstname = $middlename = $lastname = $suffix = $bday = $birthplace = $address = $gender = 
+        $civilstatus = $citizenship = $phone =  $email = $password = $curriculum = $errorMessage = 
+        $successMessage = "";
+
     } else {
-        $errorMessage = "Faculty not found.";
+        // Insert the user data into the database
+        $insertQuery = "INSERT INTO users (firstname, middlename, lastname, suffix, bday, birthplace,
+        address, genderid, civilstatus, citizenship, phone, email, pin, curriculum, usertypeid) 
+        VALUES ('$firstname', '$middlename', '$lastname', '$suffix', '$bday', '$birthplace', '$address', 
+        $gender, $civilstatus, '$citizenship', '$phone', '$email', '$password', '$curriculum', $usertype)";
+        $result = $connection->query($insertQuery);
+
+        if (!$result) {
+            $errorMessage = "Invalid query " . $connection->error;
+        } else {
+            $firstname = $middlename = $lastname = $suffix = $bday = $birthplace = $address = $gender = 
+            $civilstatus = $citizenship = $phone =  $email = $password = $curriculum = $errorMessage = 
+            $successMessage = "";
+            $errorMessage = "Account successfully created";
+        }
     }
-} else {
-    $errorMessage = "Invalid faculty ID.";
 }
 
 ?>
@@ -128,12 +144,12 @@ if ($facultyId > 0) {
 
             <!-- Body -->
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
-                <!-- Update Faculty Information -->
+                <!-- Add Admin -->
                 <div class="container px-3 pt-4">
                     <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
                         <div class="row mt-1">
-                            <h2 class="fs-5">View Faculty Information</h2>
+                            <h2 class="fs-5">Add New Admin</h2>
                         </div>
 
                         <!-- Display Error Message -->
@@ -157,13 +173,13 @@ if ($facultyId > 0) {
                                 <label class="form-label">First Name<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="firstname" id="firstname" value="<?php echo $firstname; ?>" placeholder="Enter first name" disabled>
+                                <input type="text" class="form-control" name="firstname" id="firstname" value="<?php echo $firstname; ?>" placeholder="Enter first name" required>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Gender<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <select id="gender" name="gender" class="form-select" disabled>
+                                <select id="gender" name="gender" class="form-select" required>
                                     <option value="" disabled selected>Select Gender</option>
                                     <option value="1" <?php echo ($gender === 1) ? "selected" : ""; ?>>Male</option>
                                     <option value="2" <?php echo ($gender === 2) ? "selected" : ""; ?>>Female</option>
@@ -176,13 +192,13 @@ if ($facultyId > 0) {
                                 <label class="form-label">Middle Name<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="middlename" id="middlename" value="<?php echo $middlename; ?>" placeholder="Enter middle name" disabled>
+                                <input type="text" class="form-control" name="middlename" id="middlename" value="<?php echo $middlename; ?>" placeholder="Enter middle name">
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Civil Status<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <select id="civilstatus" name="civilstatus" class="form-select" disabled>
+                                <select id="civilstatus" name="civilstatus" class="form-select" required>
                                     <option value="" disabled selected>Select Civil Status</option>
                                     <option value="1" <?php echo ($civilstatus === 1) ? "selected" : ""; ?>>Single</option>
                                     <option value="2" <?php echo ($civilstatus === 2) ? "selected" : ""; ?>>Married</option>
@@ -198,13 +214,13 @@ if ($facultyId > 0) {
                                 <label class="form-label">Last Name<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="lastname" id="lastname" value="<?php echo $lastname; ?>" placeholder="Enter last name" disabled>
+                                <input type="text" class="form-control" name="lastname" id="lastname" value="<?php echo $lastname; ?>" placeholder="Enter last name" required>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Citizenship<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="citizenship" id="citizenship" value="<?php echo $citizenship; ?>" placeholder="Enter citizenship" disabled>
+                                <input type="text" class="form-control" name="citizenship" id="citizenship" value="<?php echo $citizenship; ?>" placeholder="Enter citizenship" required>
                             </div>
                         </div>
 
@@ -213,13 +229,13 @@ if ($facultyId > 0) {
                                 <label class="form-label">Suffix</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="suffix" id="suffix" value="<?php echo $suffix; ?>" placeholder="Enter suffix" disabled>
+                                <input type="text" class="form-control" name="suffix" id="suffix" value="<?php echo $suffix; ?>" placeholder="Enter suffix">
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Phone<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="phone" id="phone" value="<?php echo $phone; ?>" placeholder="Enter phone number" disabled>
+                                <input type="text" class="form-control" name="phone" id="phone" value="<?php echo $phone; ?>" placeholder="Enter phone number">
                             </div>
                         </div>
 
@@ -228,13 +244,13 @@ if ($facultyId > 0) {
                                 <label class="form-label">Birthday<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="date" class="form-control" id="bday" name="bday" value="<?php echo $bday; ?>" disabled>
+                                <input type="date" class="form-control" id="bday" name="bday" value="<?php echo $bday; ?>" required>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Email<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="email" class="form-control" name="email" id="email" value="<?php echo $email; ?>" placeholder="Enter email address" disabled>
+                                <input type="email" class="form-control" name="email" id="email" value="<?php echo $email; ?>" placeholder="Enter email address">
                             </div>
                         </div>
 
@@ -243,13 +259,13 @@ if ($facultyId > 0) {
                                 <label class="form-label">Birthplace<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="birthplace" name="birthplace" value="<?php echo $birthplace; ?>" placeholder="Enter birth place" disabled>
+                                <input type="text" class="form-control" id="birthplace" name="birthplace" value="<?php echo $birthplace; ?>" placeholder="Enter birth place" required>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">PIN<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="password" class="form-control" name="password" id="password" value="<?php echo $password; ?>" placeholder="NOT APPLICABLE" disabled>
+                                <input type="password" class="form-control" name="password" id="password" value="<?php echo $password; ?>" placeholder="Enter password" required>
                             </div>
                         </div>
 
@@ -258,20 +274,24 @@ if ($facultyId > 0) {
                                 <label class="form-label">Address<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <textarea class="form-control" id="address" name="address" placeholder="Enter address" rows="3" disabled><?php echo $address; ?></textarea>
+                                <textarea class="form-control" id="address" name="address" placeholder="Enter address" rows="3"><?php echo $address; ?></textarea>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Curriculum</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="curriculum" id="curriculum" value="<?php echo $curriculum; ?>" placeholder="Enter curriculum" disabled>
+                                <input type="text" class="form-control" name="curriculum" id="curriculum" value="<?php echo $curriculum; ?>" placeholder="Enter curriculum">
                             </div>
                         </div>
 
+                        <div class="row mb-3 mt-2 float-end">
+                            <div class="col-sm-5">
+                                <button type="submit" class="btn btn-dark px-5">Save</button>
+                            </div>
                         </div>
                     </form>
                 </div>
-                <!-- End of View Faculty -->
+                <!-- End of Add Admin -->
             </div>
 
         </div>

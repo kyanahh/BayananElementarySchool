@@ -16,39 +16,39 @@ if (isset($_SESSION["logged_in"])) {
     $textaccount = "Account";
 }
 
-// Get faculty ID from URL
-$facultyId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+// Get admin ID from URL
+$adminId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $errorMessage = "";
 
-// Retrieve faculty information from the database
-if ($facultyId > 0) {
+// Retrieve admin information from the database
+if ($adminId > 0) {
     $query = "SELECT * FROM users WHERE userid = ?";
     $stmt = $connection->prepare($query);
-    $stmt->bind_param("i", $facultyId);
+    $stmt->bind_param("i", $adminId);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        // Fetch faculty data
-        $facultyData = $result->fetch_assoc();
-        $firstname = $facultyData['firstname'];
-        $lastname = $facultyData['lastname'];
-        $middlename = $facultyData['middlename'];
-        $gender = $facultyData['genderid'];
-        $civilstatus = $facultyData['civilstatus'];
-        $citizenship = $facultyData['citizenship'];
-        $suffix = $facultyData['suffix'];
-        $phone = $facultyData['phone'];
-        $bday = $facultyData['bday'];
-        $email = $facultyData['email'];
-        $birthplace = $facultyData['birthplace'];
-        $address = $facultyData['address'];
-        $curriculum = $facultyData['curriculum'];
+        // Fetch admin data
+        $adminData = $result->fetch_assoc();
+        $firstname = $adminData['firstname'];
+        $lastname = $adminData['lastname'];
+        $middlename = $adminData['middlename'];
+        $gender = $adminData['genderid'];
+        $civilstatus = $adminData['civilstatus'];
+        $citizenship = $adminData['citizenship'];
+        $suffix = $adminData['suffix'];
+        $phone = $adminData['phone'];
+        $bday = $adminData['bday'];
+        $email = $adminData['email'];
+        $birthplace = $adminData['birthplace'];
+        $address = $adminData['address'];
+        $curriculum = $adminData['curriculum'];
     } else {
-        $errorMessage = "Faculty not found.";
+        $errorMessage = "Admin not found.";
     }
 } else {
-    $errorMessage = "Invalid faculty ID.";
+    $errorMessage = "Invalid admin ID.";
 }
 
 ?>
@@ -128,12 +128,12 @@ if ($facultyId > 0) {
 
             <!-- Body -->
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
-                <!-- Update Faculty Information -->
+                <!-- Update Admin Information -->
                 <div class="container px-3 pt-4">
                     <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
                         <div class="row mt-1">
-                            <h2 class="fs-5">View Faculty Information</h2>
+                            <h2 class="fs-5">View Admin Information</h2>
                         </div>
 
                         <!-- Display Error Message -->
@@ -271,7 +271,7 @@ if ($facultyId > 0) {
                         </div>
                     </form>
                 </div>
-                <!-- End of View Faculty -->
+                <!-- End of View Admin -->
             </div>
 
         </div>

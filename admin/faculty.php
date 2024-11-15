@@ -93,7 +93,7 @@ if (isset($_SESSION["logged_in"])) {
 
             <!-- Body -->
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100 pt-4">
-                <!-- List of Students -->
+                <!-- List of Faculty -->
                 <div class="px-3">
                     <div class="row">
                         <div class="col-sm-1">
@@ -151,7 +151,7 @@ if (isset($_SESSION["logged_in"])) {
                                                 $count++; 
                                             }
                                         } else {
-                                            echo '<tr><td colspan="5">No student found.</td></tr>';
+                                            echo '<tr><td colspan="5">No faculty found.</td></tr>';
                                         }
                                     ?>
                                     </tbody>
