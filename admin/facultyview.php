@@ -16,98 +16,39 @@ if (isset($_SESSION["logged_in"])) {
     $textaccount = "Account";
 }
 
-$firstname = $middlename = $lastname = $suffix = $bday = $birthplace = $address = $gender = 
-$civilstatus = $citizenship = $phone =  $email = $newpassword = $curriculum = $errorMessage = $id = 
-$successMessage = "";
+// Get faculty ID from URL
+$studentId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$errorMessage = "";
 
-if (isset($_GET["id"])) {
-    $id = $_GET["id"];
+// Retrieve faculty information from the database
+if ($studentId > 0) {
+    $query = "SELECT * FROM users WHERE userid = ?";
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("i", $studentId);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    $query = "SELECT * FROM users WHERE userid = '$id'";
-
-    $res = $connection->query($query);
-
-    if ($res && $res->num_rows > 0) {
-        $row = $res->fetch_assoc();
-
-        $userid1 = $row["userid"];
-        $firstname = $row["firstname"];
-        $middlename = $row["middlename"];
-        $lastname = $row["lastname"];
-        $suffix = $row["suffix"];
-        $gender = $row["genderid"] == 1 ?  1 : 2;
-
-        $cs = $row["civilstatus"];
-        $civilstatus =  ($cs == 1) ? 1 : 
-                        (($cs == 2) ? 2 : 
-                        (($cs == 3) ? 3 : 
-                        (($cs == 4) ? 4 : 5)));
-
-        $bday = $row["bday"];
-        $birthplace = $row["birthplace"];
-        $address = $row["address"];
-        $citizenship = $row["citizenship"];
-        $phone = $row["phone"];
-        $email = $row["email"];
-        $curriculum = $row["curriculum"];
+    if ($result->num_rows > 0) {
+        // Fetch student data
+        $facultyData = $result->fetch_assoc();
+        $firstname = $facultyData['firstname'];
+        $lastname = $facultyData['lastname'];
+        $middlename = $facultyData['middlename'];
+        $gender = $facultyData['genderid'];
+        $civilstatus = $facultyData['civilstatus'];
+        $citizenship = $facultyData['citizenship'];
+        $suffix = $facultyData['suffix'];
+        $phone = $facultyData['phone'];
+        $bday = $facultyData['bday'];
+        $email = $facultyData['email'];
+        $birthplace = $facultyData['birthplace'];
+        $address = $facultyData['address'];
+        $curriculum = $facultyData['curriculum'];
     } else {
-        $errorMessage = "User not found.";
+        $errorMessage = "Faculty not found.";
     }
 } else {
-    $errorMessage = "User ID is missing.";
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
-    $firstname = $_POST["firstname"];
-    $middlename = $_POST["middlename"];
-    $lastname = $_POST["lastname"];
-    $suffix = $_POST["suffix"];
-    $gender = $_POST["gender"];
-    $bday = $_POST["bday"];
-    $birthplace = $_POST["birthplace"];
-    $address = $_POST["address"];
-    $civilstatus = $_POST["civilstatus"];
-    $citizenship = $_POST["citizenship"];
-    $phone = $_POST["phone"];
-    $email = $_POST["email"];
-    $curriculum = $_POST["curriculum"];
-    $newpassword = $_POST["newpassword"];
-
-    // Base update query
-    $query1 = "UPDATE users 
-               SET 
-                   firstname = '$firstname', 
-                   middlename = '$middlename', 
-                   lastname = '$lastname', 
-                   suffix = '$suffix', 
-                   bday = '$bday', 
-                   birthplace = '$birthplace', 
-                   address = '$address', 
-                   civilstatus = '$civilstatus', 
-                   citizenship = '$citizenship', 
-                   phone = '$phone', 
-                   email = '$email', 
-                   curriculum = '$curriculum', 
-                   genderid = '$gender'";
-
-    // Append password to query only if it's provided
-    if (!empty($newpassword)) {
-        $query1 .= ", pin = '$newpassword'";
-    }
-
-    $query1 .= " WHERE userid = '$id'";
-
-    $result = $connection->query($query1);
-
-    if ($result) {
-        // Set a session variable for success
-        $_SESSION['update_success'] = true;
-        header("Location: students.php"); 
-        exit;
-    } else {
-        $errorMessage1 = "Error updating details: " . $connection->error;
-    }
-    
+    $errorMessage = "Invalid faculty ID.";
 }
 
 ?>
@@ -187,20 +128,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
 
             <!-- Body -->
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
-                <!-- Update Student Information -->
+                <!-- Update Faculty Information -->
                 <div class="container px-3 pt-4">
                     <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
                         <div class="row mt-1">
-                            <div class="col">
-                                <h2 class="fs-5">Update Student Information</h2>
-                            </div>
-                            <div class="col-sm-2">
-                                <label class="form-label">User ID<span class="text-danger">*</span></label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" name="userid1" id="userid1" value="<?php echo $userid1; ?>" disabled>
-                            </div>
+                            <h2 class="fs-5">View Faculty Information</h2>
                         </div>
 
                         <!-- Display Error Message -->
@@ -224,13 +157,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                                 <label class="form-label">First Name<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="firstname" id="firstname" value="<?php echo $firstname; ?>" placeholder="Enter first name" required>
+                                <input type="text" class="form-control" name="firstname" id="firstname" value="<?php echo $firstname; ?>" placeholder="Enter first name" disabled>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Gender<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <select id="gender" name="gender" class="form-select" required>
+                                <select id="gender" name="gender" class="form-select" disabled>
                                     <option value="" disabled selected>Select Gender</option>
                                     <option value="1" <?php echo ($gender === 1) ? "selected" : ""; ?>>Male</option>
                                     <option value="2" <?php echo ($gender === 2) ? "selected" : ""; ?>>Female</option>
@@ -243,13 +176,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                                 <label class="form-label">Middle Name<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="middlename" id="middlename" value="<?php echo $middlename; ?>" placeholder="Enter middle name">
+                                <input type="text" class="form-control" name="middlename" id="middlename" value="<?php echo $middlename; ?>" placeholder="Enter middle name" disabled>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Civil Status<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <select id="civilstatus" name="civilstatus" class="form-select" required>
+                                <select id="civilstatus" name="civilstatus" class="form-select" disabled>
                                     <option value="" disabled selected>Select Civil Status</option>
                                     <option value="1" <?php echo ($civilstatus === 1) ? "selected" : ""; ?>>Single</option>
                                     <option value="2" <?php echo ($civilstatus === 2) ? "selected" : ""; ?>>Married</option>
@@ -265,13 +198,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                                 <label class="form-label">Last Name<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="lastname" id="lastname" value="<?php echo $lastname; ?>" placeholder="Enter last name" required>
+                                <input type="text" class="form-control" name="lastname" id="lastname" value="<?php echo $lastname; ?>" placeholder="Enter last name" disabled>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Citizenship<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="citizenship" id="citizenship" value="<?php echo $citizenship; ?>" placeholder="Enter citizenship" required>
+                                <input type="text" class="form-control" name="citizenship" id="citizenship" value="<?php echo $citizenship; ?>" placeholder="Enter citizenship" disabled>
                             </div>
                         </div>
 
@@ -280,13 +213,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                                 <label class="form-label">Suffix</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="suffix" id="suffix" value="<?php echo $suffix; ?>" placeholder="Enter suffix">
+                                <input type="text" class="form-control" name="suffix" id="suffix" value="<?php echo $suffix; ?>" placeholder="Enter suffix" disabled>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Phone<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="phone" id="phone" value="<?php echo $phone; ?>" placeholder="Enter phone number">
+                                <input type="text" class="form-control" name="phone" id="phone" value="<?php echo $phone; ?>" placeholder="Enter phone number" disabled>
                             </div>
                         </div>
 
@@ -295,13 +228,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                                 <label class="form-label">Birthday<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="date" class="form-control" id="bday" name="bday" value="<?php echo $bday; ?>" required>
+                                <input type="date" class="form-control" id="bday" name="bday" value="<?php echo $bday; ?>" disabled>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Email<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="email" class="form-control" name="email" id="email" value="<?php echo $email; ?>" placeholder="Enter email address">
+                                <input type="email" class="form-control" name="email" id="email" value="<?php echo $email; ?>" placeholder="Enter email address" disabled>
                             </div>
                         </div>
 
@@ -310,13 +243,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                                 <label class="form-label">Birthplace<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="birthplace" name="birthplace" value="<?php echo $birthplace; ?>" placeholder="Enter birth place" required>
+                                <input type="text" class="form-control" id="birthplace" name="birthplace" value="<?php echo $birthplace; ?>" placeholder="Enter birth place" disabled>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">PIN<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="password" class="form-control" name="newpassword" id="newpassword" value="<?php echo $newpassword; ?>" placeholder="Enter new password">
+                                <input type="password" class="form-control" name="password" id="password" value="<?php echo $password; ?>" placeholder="NOT APPLICABLE" disabled>
                             </div>
                         </div>
 
@@ -325,24 +258,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                                 <label class="form-label">Address<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <textarea class="form-control" id="address" name="address" placeholder="Enter address" rows="3"><?php echo $address; ?></textarea>
+                                <textarea class="form-control" id="address" name="address" placeholder="Enter address" rows="3" disabled><?php echo $address; ?></textarea>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Curriculum</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="curriculum" id="curriculum" value="<?php echo $curriculum; ?>" placeholder="Enter curriculum">
+                                <input type="text" class="form-control" name="curriculum" id="curriculum" value="<?php echo $curriculum; ?>" placeholder="Enter curriculum" disabled>
                             </div>
                         </div>
 
-                        <div class="row mb-3 mt-2 float-end">
-                            <div class="col-sm-5">
-                                <button type="submit" class="btn btn-dark px-5">Save</button>
-                            </div>
                         </div>
                     </form>
                 </div>
-                <!-- End of Add Student -->
+                <!-- End of View Student -->
             </div>
 
         </div>

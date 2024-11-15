@@ -17,97 +17,54 @@ if (isset($_SESSION["logged_in"])) {
 }
 
 $firstname = $middlename = $lastname = $suffix = $bday = $birthplace = $address = $gender = 
-$civilstatus = $citizenship = $phone =  $email = $newpassword = $curriculum = $errorMessage = $id = 
+$civilstatus = $citizenship = $phone =  $email = $password = $curriculum = $errorMessage = 
 $successMessage = "";
 
-if (isset($_GET["id"])) {
-    $id = $_GET["id"];
+$usertype = 2;
 
-    $query = "SELECT * FROM users WHERE userid = '$id'";
-
-    $res = $connection->query($query);
-
-    if ($res && $res->num_rows > 0) {
-        $row = $res->fetch_assoc();
-
-        $userid1 = $row["userid"];
-        $firstname = $row["firstname"];
-        $middlename = $row["middlename"];
-        $lastname = $row["lastname"];
-        $suffix = $row["suffix"];
-        $gender = $row["genderid"] == 1 ?  1 : 2;
-
-        $cs = $row["civilstatus"];
-        $civilstatus =  ($cs == 1) ? 1 : 
-                        (($cs == 2) ? 2 : 
-                        (($cs == 3) ? 3 : 
-                        (($cs == 4) ? 4 : 5)));
-
-        $bday = $row["bday"];
-        $birthplace = $row["birthplace"];
-        $address = $row["address"];
-        $citizenship = $row["citizenship"];
-        $phone = $row["phone"];
-        $email = $row["email"];
-        $curriculum = $row["curriculum"];
-    } else {
-        $errorMessage = "User not found.";
-    }
-} else {
-    $errorMessage = "User ID is missing.";
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
-    $firstname = $_POST["firstname"];
-    $middlename = $_POST["middlename"];
-    $lastname = $_POST["lastname"];
-    $suffix = $_POST["suffix"];
-    $gender = $_POST["gender"];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $firstname =  ucwords($_POST["firstname"]);
+    $middlename =  ucwords($_POST["middlename"]);
+    $lastname =  ucwords($_POST["lastname"]);
+    $suffix =  ucwords($_POST["suffix"]);
     $bday = $_POST["bday"];
-    $birthplace = $_POST["birthplace"];
-    $address = $_POST["address"];
+    $birthplace =  ucwords($_POST["birthplace"]);
+    $address =  ucwords($_POST["address"]);
+    $gender = $_POST["gender"];
     $civilstatus = $_POST["civilstatus"];
-    $citizenship = $_POST["citizenship"];
+    $citizenship =  ucwords($_POST["citizenship"]);
     $phone = $_POST["phone"];
     $email = $_POST["email"];
-    $curriculum = $_POST["curriculum"];
-    $newpassword = $_POST["newpassword"];
+    $password = $_POST["password"];
+    $curriculum =  ucwords($_POST["curriculum"]);
 
-    // Base update query
-    $query1 = "UPDATE users 
-               SET 
-                   firstname = '$firstname', 
-                   middlename = '$middlename', 
-                   lastname = '$lastname', 
-                   suffix = '$suffix', 
-                   bday = '$bday', 
-                   birthplace = '$birthplace', 
-                   address = '$address', 
-                   civilstatus = '$civilstatus', 
-                   citizenship = '$citizenship', 
-                   phone = '$phone', 
-                   email = '$email', 
-                   curriculum = '$curriculum', 
-                   genderid = '$gender'";
+    // Check if the email already exists in the database
+    $emailExistsQuery = "SELECT * FROM users WHERE email = '$email'";
+    $emailExistsResult = $connection->query($emailExistsQuery);
 
-    // Append password to query only if it's provided
-    if (!empty($newpassword)) {
-        $query1 .= ", pin = '$newpassword'";
-    }
+    if ($emailExistsResult->num_rows > 0) {
+        $errorMessage = "User already exists";
+        $firstname = $middlename = $lastname = $suffix = $bday = $birthplace = $address = $gender = 
+        $civilstatus = $citizenship = $phone =  $email = $password = $curriculum = $errorMessage = 
+        $successMessage = "";
 
-    $query1 .= " WHERE userid = '$id'";
-
-    $result = $connection->query($query1);
-
-    if ($result) {
-        // Set a session variable for success
-        $_SESSION['update_success'] = true;
-        header("Location: students.php"); 
-        exit;
     } else {
-        $errorMessage1 = "Error updating details: " . $connection->error;
+        // Insert the user data into the database
+        $insertQuery = "INSERT INTO users (firstname, middlename, lastname, suffix, bday, birthplace,
+        address, genderid, civilstatus, citizenship, phone, email, pin, curriculum, usertypeid) 
+        VALUES ('$firstname', '$middlename', '$lastname', '$suffix', '$bday', '$birthplace', '$address', 
+        $gender, $civilstatus, '$citizenship', '$phone', '$email', '$password', '$curriculum', $usertype)";
+        $result = $connection->query($insertQuery);
+
+        if (!$result) {
+            $errorMessage = "Invalid query " . $connection->error;
+        } else {
+            $firstname = $middlename = $lastname = $suffix = $bday = $birthplace = $address = $gender = 
+            $civilstatus = $citizenship = $phone =  $email = $password = $curriculum = $errorMessage = 
+            $successMessage = "";
+            $errorMessage = "Account successfully created";
+        }
     }
-    
 }
 
 ?>
@@ -187,20 +144,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
 
             <!-- Body -->
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
-                <!-- Update Student Information -->
+                <!-- Add Faculty -->
                 <div class="container px-3 pt-4">
                     <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
                         <div class="row mt-1">
-                            <div class="col">
-                                <h2 class="fs-5">Update Student Information</h2>
-                            </div>
-                            <div class="col-sm-2">
-                                <label class="form-label">User ID<span class="text-danger">*</span></label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" name="userid1" id="userid1" value="<?php echo $userid1; ?>" disabled>
-                            </div>
+                            <h2 class="fs-5">Add New Faculty</h2>
                         </div>
 
                         <!-- Display Error Message -->
@@ -316,7 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                                 <label class="form-label">PIN<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="password" class="form-control" name="newpassword" id="newpassword" value="<?php echo $newpassword; ?>" placeholder="Enter new password">
+                                <input type="password" class="form-control" name="password" id="password" value="<?php echo $password; ?>" placeholder="Enter password" required>
                             </div>
                         </div>
 
@@ -342,7 +291,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                         </div>
                     </form>
                 </div>
-                <!-- End of Add Student -->
+                <!-- End of Add Faculty -->
             </div>
 
         </div>
