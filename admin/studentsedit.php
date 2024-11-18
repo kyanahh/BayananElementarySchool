@@ -16,11 +16,11 @@ if (isset($_SESSION["logged_in"])) {
     $textaccount = "Account";
 }
 
-$firstname = $middlename = $lastname = $suffix = $bday = $birthplace = $address = $gender = 
-$civilstatus = $citizenship = $phone =  $email = $newpassword = $curriculum = $errorMessage = $id = 
+$firstname = $middlename = $lastname = $suffix = $bday = $birthplace = $address = $gender = "";
+$civilstatus = $citizenship = $phone =  $email = $newpassword = $curriculum = $errorMessage = "";
 $successMessage = "";
 
-if (isset($_GET["id"])) {
+if (isset($_GET["id"]) && !empty($_GET["id"])) {
     $id = $_GET["id"];
 
     $query = "SELECT * FROM users WHERE userid = '$id'";
@@ -30,7 +30,6 @@ if (isset($_GET["id"])) {
     if ($res && $res->num_rows > 0) {
         $row = $res->fetch_assoc();
 
-        $userid1 = $row["userid"];
         $firstname = $row["firstname"];
         $middlename = $row["middlename"];
         $lastname = $row["lastname"];
@@ -57,7 +56,8 @@ if (isset($_GET["id"])) {
     $errorMessage = "User ID is missing.";
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    
     $firstname = $_POST["firstname"];
     $middlename = $_POST["middlename"];
     $lastname = $_POST["lastname"];
@@ -73,31 +73,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
     $curriculum = $_POST["curriculum"];
     $newpassword = $_POST["newpassword"];
 
-    // Base update query
     $query1 = "UPDATE users 
-               SET 
-                   firstname = '$firstname', 
-                   middlename = '$middlename', 
-                   lastname = '$lastname', 
-                   suffix = '$suffix', 
-                   bday = '$bday', 
-                   birthplace = '$birthplace', 
-                   address = '$address', 
-                   civilstatus = '$civilstatus', 
-                   citizenship = '$citizenship', 
-                   phone = '$phone', 
-                   email = '$email', 
-                   curriculum = '$curriculum', 
-                   genderid = '$gender'";
+                SET 
+                    firstname = '$firstname', 
+                    middlename = '$middlename', 
+                    lastname = '$lastname', 
+                    suffix = '$suffix', 
+                    bday = '$bday', 
+                    birthplace = '$birthplace', 
+                    address = '$address', 
+                    civilstatus = '$civilstatus', 
+                    citizenship = '$citizenship', 
+                    phone = '$phone', 
+                    email = '$email', 
+                    curriculum = '$curriculum', 
+                    genderid = '$gender'";
 
-    // Append password to query only if it's provided
-    if (!empty($newpassword)) {
-        $query1 .= ", pin = '$newpassword'";
-    }
+        if (!empty($newpassword)) {
+            $query1 .= ", password = '$newpassword'";
+        }
 
-    $query1 .= " WHERE userid = '$id'";
+        $query1 .= " WHERE userid = '$id'"; 
 
-    $result = $connection->query($query1);
+        $result = $connection->query($query1);
 
     if ($result) {
         // Set a session variable for success
@@ -105,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
         header("Location: students.php"); 
         exit;
     } else {
-        $errorMessage1 = "Error updating details: " . $connection->error;
+        $errorMessage = "Error updating details: " . $connection->error;
     }
     
 }
@@ -189,7 +187,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
                 <!-- Update Student Information -->
                 <div class="container px-3 pt-4">
-                    <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                    <form method="POST" action="<?php htmlspecialchars("SELF_PHP"); ?>">
 
                         <div class="row mt-1">
                             <div class="col">
@@ -199,7 +197,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
                                 <label class="form-label">User ID<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="userid1" id="userid1" value="<?php echo $userid1; ?>" disabled>
+                                <input type="text" class="form-control" name="id" id="id" value="<?php echo $id; ?>" disabled>
                             </div>
                         </div>
 
@@ -348,8 +346,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($id)) {
         </div>
     </div> 
 
-  <!-- Script -->  
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Script -->  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </body>
 </html>

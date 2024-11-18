@@ -221,7 +221,7 @@ if (isset($_SESSION["logged_in"])) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
-        //---------------------------Edit Users---------------------------//
+        //---------------------------View Users---------------------------//
         function viewUser(id) {
             window.location = "studentsview.php?id=" + id;
         }
