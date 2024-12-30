@@ -92,15 +92,214 @@ if (isset($_SESSION["logged_in"])) {
             </div>
 
             <!-- Body -->
-            <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
+            <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100 pt-4">
+
+                <!-- List of Admission Details-->
+                <div class="px-3">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <h2 class="fs-5 mt-1 ms-2">Admission Forms</h2>
+                        </div>
+                        <div class="col input-group mb-3 ms-4">
+                            <input type="text" class="form-control" id="searchUserInput" placeholder="Search" aria-describedby="button-addon2" oninput="searchUsers()">
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="height: 600px;">
+                        <div class="card-body">
+                            <div class="table-responsive" style="height: 550px;">
+                                <table id="user-table" class="table table-bordered table-hover">
+                                    <thead class="table-light" style="position: sticky; top: 0;">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Admission ID</th>
+                                            <th scope="col">AddForm ID</th>
+                                            <th scope="col">First</th>
+                                            <th scope="col">Last</th>
+                                            <th scope="col">Birthday</th>
+                                            <th scope="col" class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                    <?php
+                                        // Query the database to fetch user data
+                                        $result = $connection->query("SELECT applicationform.*, admission.addid 
+                                        FROM applicationform INNER JOIN admission
+                                        ON applicationform.addid = admission.addid 
+                                        ORDER BY appformid DESC");
+
+                                        if ($result->num_rows > 0) {
+                                            $count = 1; 
+
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo '<tr>';
+                                                echo '<td>' . $count . '</td>';
+                                                echo '<td>' . $row['addid'] . '</td>';
+                                                echo '<td>' . $row['appformid'] . '</td>';
+                                                echo '<td>' . $row['firstname'] . '</td>';
+                                                echo '<td>' . $row['lastname'] . '</td>';
+                                                echo '<td>' . date('M d, Y', strtotime($row['birthdate'])) . '</td>';
+                                                echo '<td>';
+                                                echo '<div class="d-flex justify-content-center">';
+                                                echo '<button class="btn btn-info me-2" onclick="viewAdmission(' . $row['appformid'] . ')">View</button>';
+                                                echo '<button class="btn btn-danger" onclick="deleteAdmission(' . $row['appformid'] . ')">Delete</button>';
+                                                echo '</div>';
+                                                echo '</td>';
+                                                echo '</tr>';
+                                                $count++; 
+                                            }
+                                        } else {
+                                            echo '<tr><td colspan="5">No admission details found.</td></tr>';
+                                        }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                        <!-- Search results will be displayed here -->
+                    <div id="search-results"></div>
+                </div>
+                <!-- End of List of Admission Details -->
+
+                <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container">
+                    <div id="deleteToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">Notification</strong>
+                            <small>Just now</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            Admission Form deleted successfully.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete this admission form?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toast Notification -->
+                <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container">
+                    <div id="updateToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">Notification</strong>
+                            <small>Just now</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            Information updated successfully.
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
         </div>
     </div> 
 
-  <!-- Script -->  
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Script -->  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        //---------------------------View Admission Form---------------------------//
+        function viewAdmission(id) {
+            window.location = "adminviewforms.php?id=" + id;
+        }
+
+        //---------------------------Edit Admission Form---------------------------//
+        function editAdmission(id) {
+            window.location = "admissionformedit.php?id=" + id;
+        }
+
+        //---------------------------Delete Users---------------------------//
+        let addIdToDelete = null;
+
+        function deleteAdmission(id) {
+            addIdToDelete = id; // Store the user ID to delete
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show(); // Show the modal
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            if (addIdToDelete) {
+                $.ajax({
+                    url: 'admissionformdelete.php',
+                    method: 'POST',
+                    data: { appformid: addIdToDelete },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            showDeleteToast();
+                            setTimeout(function () {
+                                location.reload();
+                            }, 3000); // Wait 3 seconds before refreshing
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function () {
+                        alert('Error deleting user');
+                    }
+                });
+            }
+        });
+
+        function showDeleteToast() {
+            const deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
+            deleteToast.show();
+        }
+
+
+        //---------------------------Search Admission Form Results---------------------------//
+        function searchUsers() {
+            const query = document.getElementById("searchUserInput").value;
+
+            // Make an AJAX request to fetch search results
+            $.ajax({
+                url: 'admissionsearch_forms.php', // Replace with the actual URL to your search script
+                method: 'POST',
+                data: { query: query },
+                success: function(data) {
+                    // Update the user-table with the search results
+                    $('#user-table tbody').html(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error during search request:", error);
+                }
+            });
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if the session has the update success flag set
+            <?php if (isset($_SESSION['update_success'])): ?>
+                var updateToast = new bootstrap.Toast(document.getElementById('updateToast'));
+                updateToast.show();
+                <?php unset($_SESSION['update_success']); // Clear the session variable after showing the toast ?>
+            <?php endif; ?>
+        });
+    </script>
 
 </body>
 </html>
