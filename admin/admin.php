@@ -63,7 +63,7 @@ if (isset($_SESSION["logged_in"])) {
                                     </li>
                                     <li>
                                         <a href="admissionacc.php" class="nav-link">
-                                            <span>Admissions</span></a>
+                                            <span>Admission Forms</span></a>
                                     </li>
                                 </ul>
                             </div>

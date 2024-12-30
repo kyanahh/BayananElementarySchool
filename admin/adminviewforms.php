@@ -116,7 +116,7 @@ if ($appID > 0) {
                         </li>
                         <li>
                             <a href="admission.php" class="nav-link px-sm-0 px-2 text-truncate">
-                                <i class="fs-5 bi-files"></i><span class="ms-1 d-none d-sm-inline">Admission</span> </a>
+                                <i class="fs-5 bi-files"></i><span class="ms-1 d-none d-sm-inline">Admission Forms</span> </a>
                         </li>
                         <li>
                             <a href="facultyevaluation.php" class="nav-link px-sm-0 px-2 text-truncate">
