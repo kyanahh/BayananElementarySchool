@@ -22,7 +22,10 @@ $admissionData = [];
 $appformid = 'Not Available';
 $uploadedFiles = []; // To hold uploaded file statuses
 
-$query = "SELECT * FROM applicationform WHERE addid = ?";
+$query = "SELECT applicationform.*, appsched.* 
+            FROM applicationform INNER JOIN appsched 
+            ON applicationform.appformid = appsched.appformid 
+            WHERE addid = ?";
 $stmt = $connection->prepare($query);
 $stmt->bind_param("i", $addid);
 $stmt->execute();
@@ -32,6 +35,11 @@ if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $admissionData[] = $row;  // Store each row of data in the array
         $appformid = $row['appformid'];
+        $appstatus = $row['appstatus'];
+        $examdate = $row['examdate'];
+        $formattedExamDate = (new DateTime($examdate))->format('F j, Y');
+        $examvenue = $row['examvenue'];
+        $remarks = $row['remarks'];
 
         // Check which files have been uploaded
         foreach (['pic', 'psa', 'reportcard', 'goodmoral', 'validid', 'residence', 'kinder'] as $requirement) {
@@ -144,17 +152,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="card-body">
                     <div class="border py-3 px-3">
                         <p class="fw-bold">Application Status: 
-                        <br><span class="text-danger fw-bold">Not Applicable</span></p>
+                        <br><span class="fw-bold"><?php echo $appstatus ?></span></p>
                         <hr>
                         <p class="fw-bold">Application No.: <br><span><?php echo $appformid ?></span></p>
-                        <p class="fw-bold">Examination Date: <br><span class="text-danger fw-bold">Not Applicable</span></p>
-                        <p class="fw-bold">Examination Venue: <br><span class="text-danger fw-bold">Not Applicable</span></p>
+                        <p class="fw-bold">Examination Date: <br><span class="fw-bold"><?php echo $formattedExamDate ?></span></p>
+                        <p class="fw-bold">Examination Venue: <br><span class="fw-bold"><?php echo $examvenue ?></span></p>
                         <hr>
-                        <p class="fw-bold">Reminders / Remarks:</p>
+                        <p class="fw-bold">Reminders / Remarks: <?php echo $remarks ?></p>
                         <p class="text-danger fw-bold">Please check the schedule of your exam which will be shown above.</p>
                         <hr>
                         <div class="d-flex justify-content-center">
-                            <button class="btn btn-primary p-2">Print Application Form</button>
+                            <?php if (!empty($appformid)) : ?>
+                                <form method="POST" action="generate_pdf.php">
+                                    <input type="hidden" name="appformid" value="<?php echo $appformid; ?>">
+                                    <button type="submit" class="btn btn-primary p-2">Print Application Form</button>
+                                </form>
+                            <?php else : ?>
+                                <button class="btn btn-secondary p-2" disabled>Print Application Form</button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
