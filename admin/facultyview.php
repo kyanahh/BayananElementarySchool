@@ -111,6 +111,31 @@ if ($facultyId > 0) {
                             <a href="admissionsched.php" class="nav-link px-sm-0 px-2 text-truncate">
                                 <i class="fs-5 bi-calendar-check"></i><span class="ms-1 d-none d-sm-inline">Admission Schedules</span> </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="#submenu2" class="nav-link px-sm-0 px-2" data-bs-toggle="collapse" data-bs-target="#submenu2">
+                                <i class="fs-5 bi-file-person"></i><span class="ms-1 d-none d-sm-inline">Enrollment <span class="bi-caret-down"></span></span>
+                            </a>
+                            <div class="collapse collapse-horizontal px-2" id="submenu2">
+                                <ul class="list-unstyled mx-2">
+                                    <li>
+                                        <a href="gradesection.php" class="nav-link">
+                                            <span>Class Section</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="grade_enrollment.php" class="nav-link">
+                                            <span>Enrollment Applications</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="grade_classassignment.php" class="nav-link">
+                                            <span>Class Assignments</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="grade_assignment.php" class="nav-link">
+                                            <span>Grade Assignments</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
                         <li>
                             <a href="facultyevaluation.php" class="nav-link px-sm-0 px-2 text-truncate">
                                 <i class="fs-5 bi-clipboard2-check"></i><span class="ms-1 d-none d-sm-inline">Faculty Evaluation</span> </a>
