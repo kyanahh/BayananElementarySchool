@@ -16,67 +16,69 @@ if (isset($_SESSION["logged_in"])) {
     $textaccount = "Account";
 }
 
-$firstname = $lastname = $username = $bday = $email = $newpassword = $errorMessage = 
-$successMessage = "";
+$examvenue = $remarks = $examdate = $appstatus = ""; // Initialize variables
 
+// Validate and fetch appointment details
+if (isset($_GET['appformid']) && is_numeric($_GET['appformid'])) {
+    $appformid = intval($_GET['appformid']);
 
-if (isset($_GET["id"]) && !empty($_GET["id"])) {
-    $id = $_GET["id"];
+    // Fetch the appointment details
+    $stmt = $connection->prepare(
+        "SELECT applicationform.addid 
+        FROM applicationform 
+        WHERE applicationform.appformid = ?"
+    );
+    $stmt->bind_param("i", $appformid);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    $query = "SELECT * FROM admission WHERE addid = '$id'";
-
-    $res = $connection->query($query);
-
-    if ($res && $res->num_rows > 0) {
-        $row = $res->fetch_assoc();
-
-        $firstname = $row["firstname"];
-        $lastname = $row["lastname"];
-        $bday = $row["bday"];
-        $username = $row["username"];
-        $email = $row["email"];
-        
+    if ($result->num_rows > 0) {
+        $application = $result->fetch_assoc();
+        $addid = $application['addid'];
     } else {
-        $errorMessage = "User not found.";
+        echo "No application found!";
+        exit;
     }
 } else {
-    $errorMessage = "Admission ID is missing.";
+    echo "Invalid application ID!";
+    exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    
-    $firstname = $_POST["firstname"];
-    $lastname = $_POST["lastname"];
-    $username = $_POST["username"];
-    $bday = $_POST["bday"];
-    $email = $_POST["email"];
-    $newpassword = $_POST["newpassword"];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $query1 = "UPDATE admission 
-                SET 
-                    firstname = '$firstname', 
-                    lastname = '$lastname', 
-                    username = '$username', 
-                    bday = '$bday', 
-                    email = '$email'";
+    $examdate = $_POST["examdate"];
+    $examvenue = $_POST["examvenue"];
+    $appstatus = $_POST["appstatus"];
+    $remarks = $_POST["remarks"];
 
-        if (!empty($newpassword)) {
-            $query1 .= ", password = '$newpassword'";
+    // Check if the app form ID exists before proceeding
+    $stmtCheckUser = $connection->prepare("SELECT COUNT(*) FROM applicationform WHERE appformid = ?");
+    $stmtCheckUser->bind_param("i", $appformid);
+    $stmtCheckUser->execute();
+    $stmtCheckUser->bind_result($userCount);
+    $stmtCheckUser->fetch();
+    $stmtCheckUser->close();
+
+    if ($userCount === 0) {
+        $errorMessage = "Application does not exist.";
+    } else {
+        // Proceed with inserting the exam details
+        $stmt = $connection->prepare("INSERT INTO appsched (appformid, appstatus, examdate, examvenue, remarks) 
+        VALUES (?, ?, ?, ?, ?)");
+        
+        $stmt->bind_param("issss", $appformid, $appstatus, $examdate, $examvenue, $remarks);
+
+        if ($stmt->execute()) {
+            $errorMessage = "Exam schedule created successfully!";
+        } else {
+            $errorMessage = "Error: " . $stmt->error;
         }
 
-        $query1 .= " WHERE addid = '$id'"; 
-
-        $result = $connection->query($query1);
-
-    if ($result) {
-        // Set a session variable for success
-        $_SESSION['update_success'] = true;
-        header("Location: admissionacc.php"); 
-        exit;
-    } else {
-        $errorMessage = "Error updating details: " . $connection->error;
+        $stmt->close();
+        header("Location: admissionsched.php");
+        exit(); // Make sure to exit after a redirect
     }
-    
+
 }
 
 ?>
@@ -133,7 +135,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </li>
                         <li>
                             <a href="admission.php" class="nav-link px-sm-0 px-2 text-truncate">
-                                <i class="fs-5 bi-files"></i><span class="ms-1 d-none d-sm-inline">Admission Forms</span></a>
+                                <i class="fs-5 bi-files"></i><span class="ms-1 d-none d-sm-inline">Admission Forms</span> </a>
+                        </li>
+                        <li>
+                            <a href="admissionsched.php" class="nav-link px-sm-0 px-2 text-truncate">
+                                <i class="fs-5 bi-calendar-check"></i><span class="ms-1 d-none d-sm-inline">Admission Schedules</span> </a>
                         </li>
                         <li>
                             <a href="facultyevaluation.php" class="nav-link px-sm-0 px-2 text-truncate">
@@ -156,12 +162,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <!-- Body -->
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
-                <!-- Update Admission Information -->
+
+                <!-- Add Exam Schedule -->
                 <div class="container px-3 pt-4">
                     <form method="POST" action="<?php htmlspecialchars("SELF_PHP"); ?>">
 
                         <div class="row mt-1">
-                            <h2 class="fs-5">Update Admission Information</h2>
+                            <h2 class="fs-5">Add Exam Schedule</h2>
                         </div>
 
                         <!-- Display Error Message -->
@@ -182,46 +189,51 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                         <div class="row mb-3 mt-2 align-items-center">
                             <div class="col-sm-2">
-                                <label class="form-label">First Name<span class="text-danger">*</span></label>
+                                <label class="form-label">Admission ID</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="firstname" id="firstname" value="<?php echo $firstname; ?>" placeholder="Enter first name" required>
+                                <input type="text" class="form-control" name="addid" id="addid" value="<?php echo $addid; ?>" readonly>
                             </div>
                             <div class="col-sm-2">
-                                <label class="form-label">Last Name<span class="text-danger">*</span></label>
+                                <label class="form-label">Application ID</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="lastname" id="lastname" value="<?php echo $lastname; ?>" placeholder="Enter last name" required>
+                                <input type="text" class="form-control" name="appformid" id="appformid" value="<?php echo $appformid; ?>" readonly>
                             </div>
                         </div>
 
                         <div class="row mb-3 mt-2 align-items-center">
                             <div class="col-sm-2">
-                                <label class="form-label">Birthday<span class="text-danger">*</span></label>
+                                <label class="form-label">Application Status<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="date" class="form-control" id="bday" name="bday" value="<?php echo $bday; ?>" required>
+                            <select class="form-select" id="appstatus" name="appstatus" required>
+                                <option selected disabled>Select an option</option>
+                                <option value="Confirmed" <?php echo ($appstatus == 'Confirmed') ? 'selected' : ''; ?>>Confirmed</option>
+                                <option value="Passed" <?php echo ($appstatus == 'Passed') ? 'selected' : ''; ?>>Passed</option>
+                                <option value="Failed" <?php echo ($appstatus == 'Failed') ? 'selected' : ''; ?>>Failed</option>
+                            </select>
                             </div>
                             <div class="col-sm-2">
-                                <label class="form-label">Username<span class="text-danger">*</span></label>
+                                <label class="form-label">Exam Date<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="username" id="username" value="<?php echo $username; ?>" placeholder="Enter username" required>
+                                <input type="date" class="form-control" name="examdate" id="examdate" value="<?php echo $examdate; ?>" required>
                             </div>
                         </div>
 
                         <div class="row mb-3 mt-2 align-items-center">
                             <div class="col-sm-2">
-                                <label class="form-label">Email<span class="text-danger">*</span></label>
+                                <label class="form-label">Exam Venue<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="email" class="form-control" name="email" id="email" value="<?php echo $email; ?>" placeholder="Enter email address">
+                                <input type="text" class="form-control" id="examvenue" name="examvenue" value="<?php echo $examvenue; ?>" placeholder="Enter Exam Venue" required>
                             </div>
                             <div class="col-sm-2">
-                                <label class="form-label">PIN<span class="text-danger">*</span></label>
+                                <label class="form-label">Remarks</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="password" class="form-control" name="newpassword" id="password" value="<?php echo $newpassword; ?>" placeholder="Enter new password">
+                                <input type="text" class="form-control" name="remarks" id="remarks" value="<?php echo $remarks; ?>" placeholder="Remarks..">
                             </div>
                         </div>
 
@@ -232,14 +244,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </div>
                     </form>
                 </div>
-                <!-- End of Edit Admission -->
+                <!-- End of Add Exam Schedule -->
+
             </div>
 
         </div>
     </div> 
 
-  <!-- Script -->  
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Script -->  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </body>
 </html>

@@ -17,7 +17,7 @@ if (isset($_SESSION["logged_in"])) {
 }
 
 // Get application form ID from the URL
-$appID = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$appID = isset($_GET['appformid']) ? intval($_GET['appformid']) : 0;
 $errorMessage = "";
 
 // Retrieve application form data from the database
