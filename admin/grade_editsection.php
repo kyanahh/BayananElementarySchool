@@ -16,6 +16,53 @@ if (isset($_SESSION["logged_in"])) {
     $textaccount = "Account";
 }
 
+if (isset($_GET["section_id"]) && !empty($_GET["section_id"])) {
+    $section_id = $_GET["section_id"];
+
+    $query = "SELECT * FROM class_sections
+            WHERE section_id = '$section_id'";
+
+    $res = $connection->query($query);
+
+    if ($res && $res->num_rows > 0) {
+        $row = $res->fetch_assoc();
+
+        $section_name = $row["section_name"];
+        $adviser = $row["adviser"];
+
+        $grade_id = (isset($row["grade_id"]) && $row["grade_id"] >= 1 && $row["grade_id"] <= 8) ? (int)$row["grade_id"] : 8;
+
+    } else {
+        $errorMessage = "Class Section not found.";
+    }
+} else {
+    $errorMessage = "Class Section ID is missing.";
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $section_name =  ucwords($_POST["section_name"]);
+    $adviser =  ucwords($_POST["adviser"]);
+    $grade_id = $_POST["grade_id"];
+
+    $insertQuery = "UPDATE class_sections  
+                    SET 
+                    grade_id = '$grade_id', 
+                    section_name = '$section_name', 
+                    adviser = '$adviser'
+                    WHERE section_id = '$section_id'";
+
+    $result = $connection->query($insertQuery);
+
+    if ($result) {
+        // Set a session variable for success
+        $_SESSION['update_success'] = true;
+        header("Location: gradesection.php"); 
+        exit;
+    } else {
+        $errorMessage = "Error updating details: " . $connection->error;
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -122,6 +169,76 @@ if (isset($_SESSION["logged_in"])) {
 
             <!-- Body -->
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
+
+                <!-- Edit Section -->
+                <div class="container px-3 pt-4">
+                    <form method="POST" action="<?php htmlspecialchars("SELF_PHP"); ?>">
+
+                        <div class="row mt-1">
+                            <h2 class="fs-5">Edit Class Section</h2>
+                        </div>
+
+                        <!-- Display Error Message -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <?php
+                                    if (!empty($errorMessage)) {
+                                        echo "
+                                        <div class='alert alert-warning alert-dismissible fade show mt-2' role='alert'>
+                                            <strong>$errorMessage</strong>
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                        </div>
+                                        ";
+                                    }
+                                ?>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 mt-2 align-items-center">
+                            <div class="col-sm-2">
+                                <label class="form-label">Grade Level<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="form-select" id="grade_id" name="grade_id" required>
+                                    <option selected disabled>Select an option</option>
+                                    <option value="1" <?php echo ($grade_id == 1) ? 'selected' : ''; ?>>Preschool</option>
+                                    <option value="2" <?php echo ($grade_id == 2) ? 'selected' : ''; ?>>Kindergarten</option>
+                                    <option value="3" <?php echo ($grade_id == 3) ? 'selected' : ''; ?>>Grade 1</option>
+                                    <option value="4" <?php echo ($grade_id == 4) ? 'selected' : ''; ?>>Grade 2</option>
+                                    <option value="5" <?php echo ($grade_id == 5) ? 'selected' : ''; ?>>Grade 3</option>
+                                    <option value="6" <?php echo ($grade_id == 6) ? 'selected' : ''; ?>>Grade 4</option>
+                                    <option value="7" <?php echo ($grade_id == 7) ? 'selected' : ''; ?>>Grade 5</option>
+                                    <option value="8" <?php echo ($grade_id == 8) ? 'selected' : ''; ?>>Grade 6</option>
+                                </select>                            
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 mt-2 align-items-center">
+                            <div class="col-sm-2">
+                                <label class="form-label">Class Section<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="section_name" id="section_name" value="<?php echo $section_name; ?>" placeholder="Enter Section Name" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 mt-2 align-items-center">
+                            <div class="col-sm-2">
+                                <label class="form-label">Adviser<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="adviser" id="adviser" value="<?php echo $adviser; ?>" placeholder="Enter Adviser Name" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 mt-2">
+                            <div class="col-sm-5">
+                                <button type="submit" class="btn btn-dark px-5">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- End of Edit Section -->
 
             </div>
 

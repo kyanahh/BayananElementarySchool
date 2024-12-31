@@ -207,12 +207,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <label class="form-label">Application Status<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                            <select class="form-select" id="appstatus" name="appstatus" required>
-                                <option selected disabled>Select an option</option>
-                                <option value="Confirmed" <?php echo ($appstatus == 'Confirmed') ? 'selected' : ''; ?>>Confirmed</option>
-                                <option value="Passed" <?php echo ($appstatus == 'Passed') ? 'selected' : ''; ?>>Passed</option>
-                                <option value="Failed" <?php echo ($appstatus == 'Failed') ? 'selected' : ''; ?>>Failed</option>
-                            </select>
+                                <select class="form-select" id="appstatus" name="appstatus" required>
+                                    <option selected disabled>Select an option</option>
+                                    <option value="Confirmed" <?php echo ($appstatus == 'Confirmed') ? 'selected' : ''; ?>>Confirmed</option>
+                                    <option value="Passed" <?php echo ($appstatus == 'Passed') ? 'selected' : ''; ?>>Passed</option>
+                                    <option value="Failed" <?php echo ($appstatus == 'Failed') ? 'selected' : ''; ?>>Failed</option>
+                                </select>
                             </div>
                             <div class="col-sm-2">
                                 <label class="form-label">Exam Date<span class="text-danger">*</span></label>
