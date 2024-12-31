@@ -156,7 +156,7 @@ if (isset($_SESSION["logged_in"])) {
                                                         echo '<button class="btn btn-warning me-2" onclick="addSchedule(' . $appformid . ')">Add Exam Schedule</button>';
                                                     } else {
                                                         // If schedule exists, show the "View Exam Schedule" button
-                                                        echo '<button class="btn btn-dark me-2" onclick="viewExamSched(' . $appformid . ')">View Exam Schedule</button>';
+                                                        echo '<button class="btn btn-dark me-2" onclick="viewExamSched(' . $appformid . ')">Exam Schedule</button>';
                                                     }
 
                                                 echo '<button class="btn btn-info me-2" onclick="viewAdmission(' . $row['appformid'] . ')">View</button>';
@@ -242,6 +242,11 @@ if (isset($_SESSION["logged_in"])) {
         //---------------------------Add Exam Sched---------------------------//
         function addSchedule(appformid) {
             window.location = "admissionaddsched.php?appformid=" + appformid;
+        }
+
+        //---------------------------View Exam Sched---------------------------//
+        function viewExamSched(appformid) {
+            window.location = "admissionviewsched.php?appformid=" + appformid;
         }
 
         //---------------------------View Admission Form---------------------------//

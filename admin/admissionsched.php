@@ -102,7 +102,7 @@ if (isset($_SESSION["logged_in"])) {
                 <div class="px-3 pt-4">
                     <div class="row">
                         <div class="col-sm-3">
-                            <h2 class="fs-5 mt-1 ms-2">Admission Schedules</h2>
+                            <h2 class="fs-5 mt-1 ms-2">Admission Exam Schedules</h2>
                         </div>
                         <div class="col input-group mb-3 ms-4">
                             <input type="text" class="form-control" id="searchSchedInput" placeholder="Search" aria-describedby="button-addon2" oninput="searchSched()">
@@ -133,7 +133,7 @@ if (isset($_SESSION["logged_in"])) {
                                         appsched.*  
                                         FROM appsched INNER JOIN applicationform 
                                         ON appsched.appformid = applicationform.appformid 
-                                        ORDER BY schedid DESC");
+                                        ORDER BY examdate DESC");
 
                                         if ($result->num_rows > 0) {
                                             $count = 1; 
@@ -145,7 +145,7 @@ if (isset($_SESSION["logged_in"])) {
                                                 echo '<td>' . $row['addid'] . '</td>';
                                                 echo '<td>' . $row['appformid'] . '</td>';
                                                 echo '<td>' . $row['appstatus'] . '</td>';
-                                                echo '<td>' . $row['examdate'] . '</td>';
+                                                echo '<td>' . (new DateTime($row['examdate']))->format('M j Y') . '</td>';
                                                 echo '<td>' . $row['examvenue'] . '</td>';
                                                 echo '<td>' . $row['remarks'] . '</td>';
                                                 echo '<td>';
@@ -193,7 +193,7 @@ if (isset($_SESSION["logged_in"])) {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to delete this admission form?
+                            Are you sure you want to delete this exam schedule?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -227,6 +227,84 @@ if (isset($_SESSION["logged_in"])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        //---------------------------Edit Schedule---------------------------//
+        function editSched(schedid) {
+            window.location = "admissioneditsched.php?schedid=" + schedid;
+        }
+
+        //---------------------------Delete Schedule---------------------------//
+        let addIdToDelete = null;
+
+        function deleteSched(schedid) {
+            addIdToDelete = schedid; 
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show(); // Show the modal
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            if (addIdToDelete) {
+                $.ajax({
+                    url: 'admissionscheddelete.php',
+                    method: 'POST',
+                    data: { schedid: addIdToDelete },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            showDeleteToast();
+                            setTimeout(function () {
+                                location.reload();
+                            }, 3000); // Wait 3 seconds before refreshing
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function () {
+                        alert('Error deleting user');
+                    }
+                });
+            }
+        });
+
+        function showDeleteToast() {
+            const deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
+            deleteToast.show();
+        }
+
+        //---------------------------Search Schedule Results---------------------------//
+        function searchSched() {
+            const query = document.getElementById("searchSchedInput").value;
+
+            // Make an AJAX request to fetch search results
+            $.ajax({
+                url: 'admissionsearch_sched.php', // Replace with the actual URL to your search script
+                method: 'POST',
+                data: { query: query },
+                success: function(data) {
+                    // Update the sched-table with the search results
+                    $('#sched-table tbody').html(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error during search request:", error);
+                }
+            });
+        }
+
+
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if the session has the update success flag set
+            <?php if (isset($_SESSION['update_success'])): ?>
+                var updateToast = new bootstrap.Toast(document.getElementById('updateToast'));
+                updateToast.show();
+                <?php unset($_SESSION['update_success']); // Clear the session variable after showing the toast ?>
+            <?php endif; ?>
+        });
+    </script>
 
 </body>
 </html>
