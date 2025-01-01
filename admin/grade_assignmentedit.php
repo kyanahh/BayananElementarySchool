@@ -9,11 +9,64 @@ if (isset($_SESSION["logged_in"])) {
         $textaccount = $_SESSION["firstname"];
         $lname = $_SESSION["lastname"];
         $useremail = $_SESSION["email"];
+        $usersid = $_SESSION["userid"];
     } else {
         $textaccount = "Account";
     }
 } else {
     $textaccount = "Account";
+}
+
+$studentid = $gradeid = "";
+
+if (isset($_GET["id"]) && !empty($_GET["id"])) {
+    $id = $_GET["id"];
+
+    $query = "SELECT student_grade_levels.*, users.firstname, users.lastname 
+                FROM student_grade_levels INNER JOIN users 
+                ON student_grade_levels.updatedby = users.userid 
+                WHERE id = '$id'";
+
+    $res = $connection->query($query);
+
+    if ($res && $res->num_rows > 0) {
+        $row = $res->fetch_assoc();
+
+        $id = $row["id"];
+        $studentid = $row["studentid"];
+        $assigneddate = $row["assigneddate"];
+        $firstname = $row["firstname"];
+        $lastname = $row["lastname"];
+
+        $gradeid = (isset($row["gradeid"]) && $row["gradeid"] >= 1 && $row["gradeid"] <= 8) ? (int)$row["gradeid"] : 8;
+
+    } else {
+        $errorMessage = "Grade Assignment not found.";
+    }
+} else {
+    $errorMessage = "Grade Assignment ID is missing.";
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $studentid = $_POST["studentid"];
+    $gradeid = $_POST["gradeid"];
+
+    $insertQuery = "UPDATE student_grade_levels  
+                    SET  
+                    studentid = '$studentid', 
+                    gradeid = '$gradeid' 
+                    WHERE id = '$id'";
+
+    $result = $connection->query($insertQuery);
+
+    if ($result) {
+        // Set a session variable for success
+        $_SESSION['update_success'] = true;
+        header("Location: grade_assignment.php"); 
+        exit;
+    } else {
+        $errorMessage = "Error updating details: " . $connection->error;
+    }
 }
 
 ?>
@@ -122,6 +175,85 @@ if (isset($_SESSION["logged_in"])) {
 
             <!-- Body -->
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
+
+            <!-- Edit Grade Assignment -->
+            <div class="container px-3 pt-4">
+                    <form method="POST" action="<?php htmlspecialchars("SELF_PHP"); ?>">
+
+                        <div class="row mt-1">
+                            <h2 class="fs-5">Edit Grade Assignment</h2>
+                        </div>
+
+                        <!-- Display Error Message -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <?php
+                                    if (!empty($errorMessage)) {
+                                        echo "
+                                        <div class='alert alert-warning alert-dismissible fade show mt-2' role='alert'>
+                                            <strong>$errorMessage</strong>
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                        </div>
+                                        ";
+                                    }
+                                ?>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 mt-2 align-items-center">
+                            <div class="col-sm-2">
+                                <label class="form-label">ID</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="id" id="id" value="<?php echo $id; ?>" disabled>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 mt-2 align-items-center">
+                            <div class="col-sm-2">
+                                <label class="form-label">Student Number<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="studentid" id="studentid" value="<?php echo $studentid; ?>" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 mt-2 align-items-center">
+                            <div class="col-sm-2">
+                                <label class="form-label">Grade Level<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="form-select" id="gradeid" name="gradeid" required>
+                                    <option selected disabled>Select an option</option>
+                                    <option value="1" <?php echo ($gradeid == 1) ? 'selected' : ''; ?>>Preschool</option>
+                                    <option value="2" <?php echo ($gradeid == 2) ? 'selected' : ''; ?>>Kindergarten</option>
+                                    <option value="3" <?php echo ($gradeid == 3) ? 'selected' : ''; ?>>Grade 1</option>
+                                    <option value="4" <?php echo ($gradeid == 4) ? 'selected' : ''; ?>>Grade 2</option>
+                                    <option value="5" <?php echo ($gradeid == 5) ? 'selected' : ''; ?>>Grade 3</option>
+                                    <option value="6" <?php echo ($gradeid == 6) ? 'selected' : ''; ?>>Grade 4</option>
+                                    <option value="7" <?php echo ($gradeid == 7) ? 'selected' : ''; ?>>Grade 5</option>
+                                    <option value="8" <?php echo ($gradeid == 8) ? 'selected' : ''; ?>>Grade 6</option>
+                                </select>                            
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 mt-2 align-items-center">
+                            <div class="col-sm-2">
+                                <label class="form-label">Updated By</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="updatedby" id="updatedby" value="<?php echo $firstname . ' ' . $lastname; ?>" disabled>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 mt-2">
+                            <div class="col-sm-5">
+                                <button type="submit" class="btn btn-dark px-5">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- End of Edit Grade Assignment -->
 
             </div>
 
