@@ -41,6 +41,16 @@ if (isset($_POST['query'])) {
             echo '<td>' . $row['firstname'] . ' ' . $row['lastname'] . '</td>';
             echo '<td>';
             echo '<div class="d-flex justify-content-center">';
+            $id = $row['id']; 
+
+                // Check if this appformid exists in the 'id' table
+                $schedCheck = $connection->query("SELECT COUNT(*) as count FROM class_section_assignments WHERE id = $id");
+                $schedCheckResult = $schedCheck->fetch_assoc();
+
+                // If no id exists, show the "Assign Class" button
+                if ($schedCheckResult['count'] == 0) {
+                    echo '<button class="btn btn-warning me-2" onclick="assignClass(' . $id . ')">Assign Class</button>';
+                } 
             echo '<button class="btn btn-primary me-2" onclick="editAssignment(' . $row['id'] . ')">Edit</button>';
             echo '<button class="btn btn-danger" onclick="openDeleteModal(' . $row['id'] . ')">Delete</button>';
             echo '</div>';

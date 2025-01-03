@@ -123,6 +123,125 @@ if (isset($_SESSION["logged_in"])) {
             <!-- Body -->
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
 
+                <!-- List of Class Assignment -->
+                <div class="px-3 pt-4">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <h2 class="fs-5 mt-1 ms-2">Class Assignment</h2>
+                        </div>
+                        <div class="col input-group mb-3 ms-4">
+                            <input type="text" class="form-control" id="searchClassInput" placeholder="Search" aria-describedby="button-addon2" oninput="searchClass()">
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="height: 600px;">
+                        <div class="card-body">
+                            <div class="table-responsive" style="height: 550px;">
+                                <table id="class-table" class="table table-bordered table-hover">
+                                    <thead class="table-light" style="position: sticky; top: 0;">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Assignment ID</th>
+                                            <th scope="col">Student Number</th>
+                                            <th scope="col">Grade Level</th>
+                                            <th scope="col">Section</th>
+                                            <th scope="col">Assignment Date</th>
+                                            <th scope="col">Assigned By</th>
+                                            <th scope="col" class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                    <?php
+                                        // Query the database to fetch user data
+                                        $result = $connection->query("
+                                            SELECT 
+                                                users.firstname, 
+                                                users.lastname, 
+                                                class_section_assignments.assignmentid, 
+                                                class_sections.section_name, 
+                                                student_grade_levels.studentid, 
+                                                grade_levels.grade_name, 
+                                                class_section_assignments.assignmentdate
+                                            FROM 
+                                                class_section_assignments
+                                            INNER JOIN users 
+                                                ON class_section_assignments.assignedby = users.userid
+                                            INNER JOIN student_grade_levels 
+                                                ON class_section_assignments.id = student_grade_levels.id
+                                            INNER JOIN class_sections 
+                                                ON class_section_assignments.sectionid = class_sections.section_id
+                                            INNER JOIN grade_levels 
+                                                ON class_sections.grade_id = grade_levels.grade_id
+                                            ORDER BY 
+                                                class_section_assignments.assignmentdate DESC
+                                        ");
+
+                                        if ($result->num_rows > 0) {
+                                            $count = 1; 
+
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo '<tr>';
+                                                echo '<td>' . $count . '</td>';
+                                                echo '<td>' . $row['assignmentid'] . '</td>';
+                                                echo '<td>' . $row['studentid'] . '</td>';
+                                                echo '<td>' . $row['grade_name'] . '</td>';
+                                                echo '<td>' . $row['section_name'] . '</td>';
+                                                echo '<td>' . $row['assignmentdate'] . '</td>';
+                                                echo '<td>' . $row['firstname'] . ' ' . $row['lastname'] . '</td>';
+                                                echo '<td>';
+                                                echo '<div class="d-flex justify-content-center">';
+                                                echo '<button class="btn btn-primary me-2" onclick="editClass(' . $row['assignmentid'] . ')">Edit</button>';
+                                                echo '<button class="btn btn-danger" onclick="openDeleteModal(' . $row['assignmentid'] . ')">Delete</button>';
+                                                echo '</div>';
+                                                echo '</td>';
+                                                echo '</tr>';
+                                                $count++; 
+                                            }
+                                        } else {
+                                            echo '<tr><td colspan="5">No enrollment application found.</td></tr>';
+                                        }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                        <!-- Search results will be displayed here -->
+                    <div id="search-results"></div>
+                </div>
+                <!-- End of List of Class Assignment -->
+
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete this grade assignment?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button id="confirmDeleteButton" type="button" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Notification -->
+            <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer">
+                <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body" id="toastMessage">
+                            Class assignment added successfully!
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -133,6 +252,80 @@ if (isset($_SESSION["logged_in"])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        //---------------------------Search Class Assignment---------------------------//
+        function searchClass() {
+            const query = document.getElementById("searchClassInput").value;
+
+            // Make an AJAX request to fetch search results
+            $.ajax({
+                url: 'grade_classsearch.php', // Replace with the actual URL to your search script
+                method: 'POST',
+                data: { query: query },
+                success: function(data) {
+                    // Update the sched-table with the search results
+                    $('#class-table tbody').html(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error during search request:", error);
+                }
+            });
+        }
+
+        // Function to display the toast
+        function showToast(message, className) {
+            // Get the toast elements
+            const toastMessage = document.getElementById('toastMessage');
+            const toastElement = document.getElementById('liveToast');
+
+            // Update the toast message and class
+            toastMessage.textContent = message;
+            toastElement.className = `toast align-items-center text-white ${className} border-0`;
+
+            // Initialize and show the toast
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+
+        //---------------------------Edit Class Assignment ---------------------------//
+        function editClass(assignmentid) {
+            window.location = "grade_classedit.php?assignmentid=" + assignmentid;
+        }
+
+        //---------------------------Delete Class Assignment ---------------------------//
+        let classIdToDelete = null;
+
+        // Open Delete Modal
+        function openDeleteModal(id) {
+            classIdToDelete = id;
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+
+        // Handle Delete Confirmation
+        document.getElementById('confirmDeleteButton').addEventListener('click', function () {
+            if (classIdToDelete) {
+                $.ajax({
+                    url: "grade_classdelete.php",
+                    method: "POST",
+                    data: { classId: classIdToDelete },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            showToast(response.success, "bg-success");
+                            setTimeout(() => location.reload(), 2000); // Optional delay before reload
+                        } else {
+                            showToast(response.error, "bg-danger");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        showToast("Error deleting the class assignment", "bg-danger");
+                    }
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>

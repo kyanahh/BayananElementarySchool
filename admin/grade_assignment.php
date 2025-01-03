@@ -176,6 +176,16 @@ if (isset($_SESSION["logged_in"])) {
                                                 echo '<td>' . $row['firstname'] . ' ' . $row['lastname'] . '</td>';
                                                 echo '<td>';
                                                 echo '<div class="d-flex justify-content-center">';
+                                                $id = $row['id']; 
+
+                                                    // Check if this appformid exists in the 'id' table
+                                                    $schedCheck = $connection->query("SELECT COUNT(*) as count FROM class_section_assignments WHERE id = $id");
+                                                    $schedCheckResult = $schedCheck->fetch_assoc();
+
+                                                    // If no id exists, show the "Assign Class" button
+                                                    if ($schedCheckResult['count'] == 0) {
+                                                        echo '<button class="btn btn-warning me-2" onclick="assignClass(' . $id . ')">Assign Class</button>';
+                                                    } 
                                                 echo '<button class="btn btn-primary me-2" onclick="editGrade(' . $row['id'] . ')">Edit</button>';
                                                 echo '<button class="btn btn-danger" onclick="openDeleteModal(' . $row['id'] . ')">Delete</button>';
                                                 echo '</div>';
@@ -240,6 +250,11 @@ if (isset($_SESSION["logged_in"])) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+
+        //---------------------------Assign Class Section---------------------------//
+        function assignClass(id) {
+            window.location = "grade_classadd.php?id=" + id;
+        }
 
         //---------------------------Search Grade Assignment---------------------------//
         function searchGrade() {
