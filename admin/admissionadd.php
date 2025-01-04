@@ -130,10 +130,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <a href="grade_classassignment.php" class="nav-link">
                                             <span>Class Assignments</span></a>
                                     </li>
-                                    <li>
-                                        <a href="grade_assignment.php" class="nav-link">
-                                            <span>Grade Assignments</span></a>
-                                    </li>
                                 </ul>
                             </div>
                         </li>
