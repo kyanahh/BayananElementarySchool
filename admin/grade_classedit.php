@@ -20,13 +20,13 @@ if (isset($_SESSION["logged_in"])) {
 if (isset($_GET["assignmentid"]) && !empty($_GET["assignmentid"])) {
     $assignmentid = $_GET["assignmentid"];
 
-    $query = "SELECT class_section_assignments.*, student_grade_levels.studentid, class_sections.section_name, users.firstname, users.lastname 
+    $query = "SELECT class_section_assignments.*, enrollment_applications.studentid, class_sections.section_name, users.firstname, users.lastname 
     FROM (((class_section_assignments INNER JOIN class_sections
         ON class_section_assignments.sectionid = class_sections.section_id) 
     INNER JOIN users 
         ON class_section_assignments.assignedby = users.userid) 
-    INNER JOIN student_grade_levels
-        ON class_section_assignments.id = student_grade_levels.id) 
+    INNER JOIN enrollment_applications
+        ON class_section_assignments.applicationid = enrollment_applications.applicationid) 
                 WHERE assignmentid = '$assignmentid'";
 
     $res = $connection->query($query);
@@ -34,7 +34,7 @@ if (isset($_GET["assignmentid"]) && !empty($_GET["assignmentid"])) {
     if ($res && $res->num_rows > 0) {
         $row = $res->fetch_assoc();
 
-        $id = $row["id"];
+        $applicationid = $row["applicationid"];
         $studentid = $row["studentid"];
         $assignmentdate = $row["assignmentdate"];
         $firstname = $row["firstname"];
@@ -42,10 +42,10 @@ if (isset($_GET["assignmentid"]) && !empty($_GET["assignmentid"])) {
         $sectionid = $row["sectionid"];
 
     } else {
-        $errorMessage = "Grade Assignment not found.";
+        $errorMessage = "Application not found.";
     }
 } else {
-    $errorMessage = "Grade Assignment ID is missing.";
+    $errorMessage = "Application ID is missing.";
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -206,7 +206,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <label class="form-label">Assignment ID</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="id" id="id" value="<?php echo $id; ?>" disabled>
+                                <input type="text" class="form-control" name="assignmentid" id="assignmentid" value="<?php echo $assignmentid; ?>" disabled>
                             </div>
                         </div>
 
@@ -230,7 +230,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <option selected disabled>Select an option</option>
                                 <?php
                                 // Fetch the gradeid for the selected student
-                                $gradeQuery = "SELECT gradeid FROM student_grade_levels WHERE id = '$id'";
+                                $gradeQuery = "SELECT gradeid FROM enrollment_applications WHERE applicationid = '$applicationid'";
                                 $gradeResult = $connection->query($gradeQuery);
 
                                 if ($gradeResult && $gradeResult->num_rows > 0) {

@@ -159,15 +159,15 @@ if (isset($_SESSION["logged_in"])) {
                                                 users.lastname, 
                                                 class_section_assignments.assignmentid, 
                                                 class_sections.section_name, 
-                                                student_grade_levels.studentid, 
+                                                enrollment_applications.studentid, 
                                                 grade_levels.grade_name, 
                                                 class_section_assignments.assignmentdate
                                             FROM 
                                                 class_section_assignments
                                             INNER JOIN users 
                                                 ON class_section_assignments.assignedby = users.userid
-                                            INNER JOIN student_grade_levels 
-                                                ON class_section_assignments.id = student_grade_levels.id
+                                            INNER JOIN enrollment_applications 
+                                                ON class_section_assignments.applicationid = enrollment_applications.applicationid
                                             INNER JOIN class_sections 
                                                 ON class_section_assignments.sectionid = class_sections.section_id
                                             INNER JOIN grade_levels 

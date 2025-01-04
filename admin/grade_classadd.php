@@ -17,25 +17,25 @@ if (isset($_SESSION["logged_in"])) {
     $textaccount = "Account";
 }
 
-if (isset($_GET["id"]) && !empty($_GET["id"])) {
-    $id = $_GET["id"];
+if (isset($_GET["applicationid"]) && !empty($_GET["applicationid"])) {
+    $applicationid = $_GET["applicationid"];
 
-    $query = "SELECT * FROM student_grade_levels  
-                WHERE id = '$id'";
+    $query = "SELECT * FROM enrollment_applications   
+                WHERE applicationid = '$applicationid'";
 
     $res = $connection->query($query);
 
     if ($res && $res->num_rows > 0) {
         $row = $res->fetch_assoc();
 
-        $id = $row["id"];
+        $applicationid = $row["applicationid"];
         $studentid = $row["studentid"];
 
     } else {
-        $errorMessage = "Grade Assignment not found.";
+        $errorMessage = "Application not found.";
     }
 } else {
-    $errorMessage = "Grade Assignment ID is missing.";
+    $errorMessage = "Application ID is missing.";
 }
 
 // Get the current date and time
@@ -45,8 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sectionid = $_POST["sectionid"];
 
     // Insert the section data into the database
-    $insertQuery = "INSERT INTO class_section_assignments (id, sectionid, assignmentdate, assignedby) 
-    VALUES ($id, $sectionid, '$assigneddate', '$usersid')";
+    $insertQuery = "INSERT INTO class_section_assignments (applicationid, sectionid, assignmentdate, assignedby) 
+    VALUES ($applicationid, $sectionid, '$assigneddate', '$usersid')";
     $result = $connection->query($insertQuery);
 
     if ($result) {
@@ -192,10 +192,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <div class="row mb-3 mt-2 align-items-center">
                             <div class="col-sm-2">
-                                <label class="form-label">Assignment ID</label>
+                                <label class="form-label">Application ID</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="id" id="id" value="<?php echo $id; ?>" disabled>
+                                <input type="text" class="form-control" name="applicationid" id="applicationid" value="<?php echo $applicationid; ?>" disabled>
                             </div>
                         </div>
 
@@ -218,7 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <?php
                                         // Fetch section names from class_sections table
                                         // Fetch the gradeid for the selected student
-                                        $gradeQuery = "SELECT gradeid FROM student_grade_levels WHERE id = '$id'";
+                                        $gradeQuery = "SELECT gradeid FROM enrollment_applications WHERE applicationid = '$applicationid'";
                                         $gradeResult = $connection->query($gradeQuery);
 
                                         if ($gradeResult && $gradeResult->num_rows > 0) {

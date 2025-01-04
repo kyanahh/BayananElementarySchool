@@ -176,6 +176,19 @@ if (isset($_SESSION["logged_in"])) {
                                                 echo '<td>';
                                                 echo '<div class="d-flex justify-content-center">';
 
+                                                if ($row['application_status'] == 'Approved') {
+                                                $applicationid = $row['applicationid']; 
+
+                                                    // Check if this appformid exists in the 'id' table
+                                                    $schedCheck = $connection->query("SELECT COUNT(*) as count FROM class_section_assignments WHERE applicationid = $applicationid");
+                                                    $schedCheckResult = $schedCheck->fetch_assoc();
+
+                                                    // If no id exists, show the "Assign Class" button
+                                                    if ($schedCheckResult['count'] == 0) {
+                                                        echo '<button class="btn btn-warning me-2" onclick="assignClass(' . $applicationid . ')">Assign Class</button>';
+                                                    } 
+                                                }
+
                                                 if ($row['application_status'] == 'Pending') {
                                                     echo '<button class="btn btn-success me-2" onclick="Approve(' . $row['applicationid'] . ')">Approve</button>';
                                                     echo '<button class="btn btn-danger me-2" onclick="Rejected(' . $row['applicationid'] . ')">Reject</button>';
@@ -301,6 +314,11 @@ if (isset($_SESSION["logged_in"])) {
                     console.error("Error during search request:", error);
                 }
             });
+        }
+
+        //---------------------------Assign Class Section---------------------------//
+        function assignClass(applicationid) {
+            window.location = "grade_classadd.php?applicationid=" + applicationid;
         }
 
         //---------------------------Approve Enrollment---------------------------//
