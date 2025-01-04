@@ -88,9 +88,46 @@ if(isset($_SESSION["logged_in"])){
         </div>
       </nav>
 
-      <div>
-
+      <div class="mt-5">
+          <h2 class="text-white fw-bold text-center mb-3">Parent Teacher Associaton</h2>
       </div>
+      <div class="container" style="height: 400px; overflow-y: scroll; background-color: #424d21; padding: 15px; border-radius: 8px; scrollbar-width: none; -ms-overflow-style: none;">
+        <style>
+            /* Hide the scrollbar */
+            .container::-webkit-scrollbar {
+                display: none;
+            }
+        </style>
+      <?php
+        // Fetch posts from the database
+        $query = "
+            SELECT pta.ptaid, pta.ptatitle, pta.ptapost, 
+                DATE_FORMAT(pta.dateposted, '%M %d, %Y') AS datepost, 
+                users.firstname, users.lastname  
+            FROM pta 
+            INNER JOIN users ON pta.postedby = users.userid 
+            ORDER BY ptaid DESC";
+        $result = $connection->query($query);
+
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                // Display each post
+                echo '<div class="card mb-3 shadow">';
+                echo '  <div class="card-body">';
+                echo '    <h5 class="card-title fw-bold">' . htmlspecialchars($row['ptatitle']) . '</h5>';
+                echo '    <p class="card-text">' . nl2br(htmlspecialchars($row['ptapost'])) . '</p>';
+                echo '    <p class="card-text">';
+                echo '      <small class="text-muted">Posted by ' . htmlspecialchars($row['firstname'] . ' ' . $row['lastname']);
+                echo '      on ' . htmlspecialchars($row['datepost']) . '</small>';
+                echo '    </p>';
+                echo '  </div>';
+                echo '</div>';
+            }
+        } else {
+            echo '<div class="alert alert-info" role="alert">No posts available.</div>';
+        }
+        ?>
+    </div>
 
     <hr class="mt-5">
     <footer>

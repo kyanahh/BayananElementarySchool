@@ -134,6 +134,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
                         </li>
                         <li>
+                            <a href="pta.php" class="nav-link px-sm-0 px-2 text-truncate">
+                                <i class="fs-5 bi-clipboard2-check"></i><span class="ms-1 d-none d-sm-inline">PTA</span> </a>
+                        </li>
+                        <li>
                             <a href="facultyevaluation.php" class="nav-link px-sm-0 px-2 text-truncate">
                                 <i class="fs-5 bi-clipboard2-check"></i><span class="ms-1 d-none d-sm-inline">Faculty Evaluation</span> </a>
                         </li>
