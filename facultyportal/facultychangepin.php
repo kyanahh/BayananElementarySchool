@@ -7,7 +7,7 @@ require("../server/connection.php");
 if(isset($_SESSION["logged_in"])){
     if(isset($_SESSION["firstname"]) || isset($_SESSION["email"])){
         $textaccount = $_SESSION["firstname"];
-        $useremail = $_SESSION["email"];
+        $usersid = $_SESSION["userid"];
     }else{
         $textaccount = "Account";
     }
@@ -18,13 +18,13 @@ if(isset($_SESSION["logged_in"])){
 $errorMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $useremail = $_SESSION["email"];
+    $usersid = $_SESSION["userid"];
     $oldpass = $_POST["oldpass"];
     $newpass = $_POST["newpass"];
     $confirmnewpass = $_POST["confirmnewpass"];
 
     // Fetch the current pin from the database
-    $result = $connection->query("SELECT pin FROM users WHERE email = '$useremail'");
+    $result = $connection->query("SELECT pin FROM users WHERE userid = '$usersid'");
     $record = $result->fetch_assoc();
     $stored_password = $record["pin"];
 
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Check if the new pin matches the confirmation pin
         if ($newpass == $confirmnewpass) {
             // Update the pin
-            $connection->query("UPDATE users SET pin = '$newpass' WHERE email = '$useremail'");
+            $connection->query("UPDATE users SET pin = '$newpass' WHERE userid = '$usersid'");
             $errorMessage = "Password changed successfully";
         } else {
             // If new pins don't match
@@ -75,22 +75,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
               <!-- HOME -->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="parenthome.php">Home</a>
+                <a class="nav-link" aria-current="page" href="facultyhome.php">Home</a>
               </li>
 
               <!-- PTA -->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="parentpta.php">PTA</a>
+                <a class="nav-link" aria-current="page" href="facultypta.php">PTA</a>
               </li>
 
               <!-- e-Consultation-->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                e-Consultation
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="parentconsult.php">Consult a Teacher</a></li>
-                </ul>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="facultychats.php">e-Consultation</a>
               </li>
 
               <!-- OTHER SERVICES -->
@@ -99,10 +94,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   Other Services
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="parentaccmgt.php">Account Management</a></li>
+                  <li><a class="dropdown-item" href="facultyaccmgt.php">Account Management</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item">Logged in as:</a></li>
-                  <li><a class="dropdown-item"><?php echo $useremail; ?></a></li>
+                  <li><a class="dropdown-item"><?php echo $usersid; ?></a></li>
                 </ul>
               </li>
               
@@ -123,10 +118,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link text-black" href="parentaccmgt.php">Profile</a>
+                    <a class="nav-link text-black" href="studentaccmgt.php">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-black active" aria-current="true" href="parentchangepin.php">Change PIN</a>
+                    <a class="nav-link text-black active" aria-current="true" href="studentchangepin.php">Change PIN</a>
                 </li>
                 </ul>
             </div>
@@ -189,10 +184,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
         </div>
-    </footer>      
+    </footer>
 
-      
-    
+
     <!-- Script -->  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 

@@ -7,7 +7,7 @@ require("../server/connection.php");
 if(isset($_SESSION["logged_in"])){
     if(isset($_SESSION["firstname"]) || isset($_SESSION["email"])){
         $textaccount = $_SESSION["firstname"];
-        $useremail = $_SESSION["email"];
+        $usersid = $_SESSION["userid"];
     }else{
         $textaccount = "Account";
     }
@@ -45,22 +45,17 @@ if(isset($_SESSION["logged_in"])){
 
               <!-- HOME -->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="parenthome.php">Home</a>
+                <a class="nav-link" aria-current="page" href="facultyhome.php">Home</a>
               </li>
 
               <!-- PTA -->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="parentpta.php">PTA</a>
+                <a class="nav-link" aria-current="page" href="facultypta.php">PTA</a>
               </li>
 
               <!-- e-Consultation-->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                e-Consultation
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="parentconsult.php">Consult a Teacher</a></li>
-                </ul>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="facultychats.php">e-Consultation</a>
               </li>
 
               <!-- OTHER SERVICES -->
@@ -69,10 +64,10 @@ if(isset($_SESSION["logged_in"])){
                   Other Services
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="parentaccmgt.php">Account Management</a></li>
+                  <li><a class="dropdown-item" href="facultyaccmgt.php">Account Management</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item">Logged in as:</a></li>
-                  <li><a class="dropdown-item"><?php echo $useremail; ?></a></li>
+                  <li><a class="dropdown-item"><?php echo $usersid; ?></a></li>
                 </ul>
               </li>
               
