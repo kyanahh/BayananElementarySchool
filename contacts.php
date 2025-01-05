@@ -113,6 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <li><a class="dropdown-item" href="#">Facilities</a></li>
                   <li><a class="dropdown-item" href="hymn.html">BESMAIN Hymn</a></li>
                   <li><a class="dropdown-item" href="clubs.html">Sports Clubs & Activities</a></li>
+                  <li><a class="dropdown-item" href="achievements.html">BESMAIN Achievements</a></li>
                 </ul>
               </li>
 
