@@ -110,8 +110,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   Life@BES
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="hymn.html">BESMAIN Hymn</a></li>
                   <li><a class="dropdown-item" href="#">Facilities</a></li>
+                  <li><a class="dropdown-item" href="hymn.html">BESMAIN Hymn</a></li>
+                  <li><a class="dropdown-item" href="clubs.html">Sports Clubs & Activities</a></li>
                 </ul>
               </li>
 
