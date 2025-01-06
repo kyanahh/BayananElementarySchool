@@ -59,13 +59,6 @@ if(isset($_SESSION["logged_in"])){
                 </ul>
               </li>
 
-              <!-- Faculty Evaluation -->
-              <li class="nav-item">
-                <a class="nav-link" href="facultyevalutation.php">
-                    Faculty Evaluation
-                </a>
-              </li>
-
               <!-- OTHER SERVICES -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

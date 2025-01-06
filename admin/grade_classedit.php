@@ -155,10 +155,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="pta.php" class="nav-link px-sm-0 px-2 text-truncate">
                                 <i class="fs-5 bi-person-vcard-fill"></i><span class="ms-1 d-none d-sm-inline">PTA</span> </a>  
                         </li>
-                        <li>
-                            <a href="facultyevaluation.php" class="nav-link px-sm-0 px-2 text-truncate">
-                                <i class="fs-5 bi-clipboard2-check"></i><span class="ms-1 d-none d-sm-inline">Faculty Evaluation</span> </a>
-                        </li>
                     </ul>
                     <div class="dropup py-sm-4 py-1 mt-sm-auto ms-auto ms-sm-0 flex-shrink-1">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
