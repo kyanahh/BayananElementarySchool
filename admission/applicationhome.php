@@ -18,8 +18,14 @@ if (isset($_SESSION["logged_in"])) {
     $textaccount = "Account";
 }
 
-$admissionData = [];
+$appstatus = 'Not Available';
+$examdate = 'Not Available';
+$examvenue = 'Not Available';
+$formattedExamDate = 'Not Available';
+$remarks = 'Not Available';
 $appformid = 'Not Available';
+
+$admissionData = [];
 $uploadedFiles = []; // To hold uploaded file statuses
 
 $query = "SELECT applicationform.*, appsched.* 
@@ -32,25 +38,25 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $admissionData[] = $row;  // Store each row of data in the array
-        $appformid = $row['appformid'];
-        $appstatus = $row['appstatus'];
-        $examdate = $row['examdate'];
-        $formattedExamDate = (new DateTime($examdate))->format('F j, Y');
-        $examvenue = $row['examvenue'];
-        $remarks = $row['remarks'];
+    $admissionData = $result->fetch_all(MYSQLI_ASSOC);
+    $row = $admissionData[0]; // Use the first record
+    
+    $appformid = $row['appformid'];
+    $appstatus = $row['appstatus'];
+    $examdate = $row['examdate'];
+    $formattedExamDate = (new DateTime($examdate))->format('F j, Y');
+    $examvenue = $row['examvenue'];
+    $remarks = $row['remarks'];
 
-        // Check which files have been uploaded
-        foreach (['pic', 'psa', 'reportcard', 'goodmoral', 'validid', 'residence', 'kinder'] as $requirement) {
-            if (!empty($row[$requirement])) {
-                $uploadedFiles[$requirement] = true; // Mark as uploaded
-            }
+    foreach (['pic', 'psa', 'reportcard', 'goodmoral', 'validid', 'residence', 'kinder'] as $requirement) {
+        if (!empty($row[$requirement])) {
+            $uploadedFiles[$requirement] = true;
         }
     }
 } else {
     echo "No application data found.";
 }
+
 
 $uploadMessage = "";
 
