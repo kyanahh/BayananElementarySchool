@@ -102,7 +102,7 @@ if (isset($_POST["studentnumber"]) && isset($_POST["password"])) {
                     <form method="POST" action="<?php htmlspecialchars("SELF_PHP"); ?>">
                         <div class="row mt-2">
                             <div class="col input-group">
-                                <input type="text" class="form-control" id="studentnumber" name="studentnumber" placeholder="Student Number" required>
+                                <input type="text" class="form-control" id="studentnumber" name="studentnumber" placeholder="LRN" required>
                             </div>
                         </div>
                         <div class="row mt-2">
