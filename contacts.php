@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <li><a class="dropdown-item" href="visionmission.html">Vision and Mission</a></li>
                   <li><a class="dropdown-item" href="history.html">History</a></li>
                   <li><a class="dropdown-item" href="contacts.php">Contacts and Directory</a></li>
-                  <li><a class="dropdown-item" href="#">Board of Regents</a></li>
+                  <li><a class="dropdown-item" href="#">Organizational Chart</a></li>
                 </ul>
               </li>
 
@@ -178,15 +178,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <div class="row">
             <div class="col">
               <p>Telephone Number:</p>
-              <p>8862 – 2199</p>
+              <p>8832-5842</p>
               <p class="mt-2">Telfax Number:</p>
-              <p>8862 – 2199</p>
+              <p>8832-5842</p>
             </div>
             <div class="col">
               <p>Address:</p>
-              <p>F.L.Navarro Ln, Bayanan, Muntinlupa, 1772 Metro Manila</p>
+              <p>National Road, Summit Homes, Bayanan, Muntinlupa City, Metro Manila</p>
               <p class="mt-2">Email Address:</p>
-              <a class="text-decoration-none" href="mailto:bayanan.esmain2016@gmail.com">bayanan.esmain2016@gmail.com</a>
+              <ul>
+                <li>
+                  <a class="text-decoration-none" href="mailto:bayanan.esmain2016@gmail.com">bayanan.esmain2016@gmail.com</a>
+                </li>  
+                <li>
+                  <a class="text-decoration-none" href="mailto:13699@deped.gov.ph">13699@deped.gov.ph</a>
+                </li>
+              </ul>
             </div>
           </div>
             <div class="card p-4 mt-3">

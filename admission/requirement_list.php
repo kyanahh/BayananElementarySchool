@@ -83,23 +83,11 @@ if (isset($_SESSION["logged_in"])) {
         <p>For transferees and incoming Grade 1 students, please provide a copy of the latest report card indicating the student’s previous school performance.</p>
       </li>
       <li class="list-group-item">
-        <h5>3. Certificate of Good Moral Character</h5>
-        <p>For Grade 2 and up, submit a Certificate of Good Moral Character from the student’s previous school.</p>
-      </li>
-      <li class="list-group-item">
-        <h5>4. 2x2 ID Photos</h5>
+        <h5>3. 2x2 ID Photos</h5>
         <p>Submit four (4) recent 2x2 ID photos with the student’s name at the back of each photo.</p>
       </li>
       <li class="list-group-item">
-        <h5>5. Parent's or Guardian's Valid ID</h5>
-        <p>Submit a photocopy of a valid ID of the parent or guardian (e.g., Driver’s License, Passport, or any government-issued ID).</p>
-      </li>
-      <li class="list-group-item">
-        <h5>6. Proof of Residence</h5>
-        <p>Provide any document that indicates your current residential address (e.g., utility bill or barangay certificate).</p>
-      </li>
-      <li class="list-group-item">
-        <h5>7   . Kindergarten Certificate of Completion</h5>
+        <h5>4. ECCD Card</h5>
         <p>For incoming Grade 1 students, provide the Kindergarten Certificate of Completion or equivalent document.</p>
       </li>
     </ul>

@@ -62,7 +62,7 @@ $uploadMessage = "";
 
 // Handle file uploads
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $requirements = ['pic', 'psa', 'reportcard', 'goodmoral', 'validid', 'residence', 'kinder'];
+    $requirements = ['pic', 'psa', 'reportcard', 'kinder'];
 
     foreach ($requirements as $requirement) {
         if (isset($_FILES[$requirement]) && $_FILES[$requirement]['error'] == UPLOAD_ERR_OK) {
@@ -205,10 +205,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         'pic' => 'Upload Scanned Copy of 2x2 Picture with White Background',
                         'psa' => 'Upload Scanned Copy of PSA Birth Certificate',
                         'reportcard' => 'Upload Scanned Copy of Report Card (Form 138)',
-                        'goodmoral' => 'Upload Scanned Copy of Good Moral',
-                        'validid' => 'Upload Scanned Copy of Parent\'s/Guardian\'s Valid ID',
-                        'residence' => 'Upload Scanned Copy of Proof of Residence',
-                        'kinder' => 'Upload Scanned Copy of Kindergarten Certificate of Completion (if applicable)',
+                        'kinder' => 'Upload Scanned Copy of ECCD Card (if applicable)',
                     ];
 
                     foreach ($requirementsText as $key => $requirement) { ?>
