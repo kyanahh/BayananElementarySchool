@@ -138,7 +138,7 @@ if (isset($_SESSION["logged_in"])) {
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Assignment ID</th>
-                                            <th scope="col">Student Number</th>
+                                            <th scope="col">LRN</th>
                                             <th scope="col">Grade Level</th>
                                             <th scope="col">Section</th>
                                             <th scope="col">Assignment Date</th>

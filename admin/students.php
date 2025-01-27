@@ -139,7 +139,7 @@ if (isset($_SESSION["logged_in"])) {
                                     <thead class="table-light" style="position: sticky; top: 0;">
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">Student ID</th>
+                                            <th scope="col">LRN</th>
                                             <th scope="col">First</th>
                                             <th scope="col">Last</th>
                                             <th scope="col">Email</th>

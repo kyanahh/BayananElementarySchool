@@ -170,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <div class="row mb-3 mt-2 align-items-center">
                             <div class="col-sm-2">
-                                <label class="form-label">Student Number<span class="text-danger">*</span></label>
+                                <label class="form-label">LRN<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" name="studentid" id="studentid" value="<?php echo $studentid; ?>" placeholder="Enter Student Number" required>

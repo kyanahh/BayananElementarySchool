@@ -219,7 +219,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 <h2 class="fs-5">Update Student Information</h2>
                             </div>
                             <div class="col-sm-2">
-                                <label class="form-label">User ID<span class="text-danger">*</span></label>
+                                <label class="form-label">LRN<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" name="id" id="id" value="<?php echo $id; ?>" disabled>
