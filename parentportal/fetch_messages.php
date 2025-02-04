@@ -1,4 +1,5 @@
 <?php
+
 require("../server/connection.php");
 
 $query = "SELECT cm.message, cm.sent_at, u.firstname, u.usertypeid FROM chat_messages cm 

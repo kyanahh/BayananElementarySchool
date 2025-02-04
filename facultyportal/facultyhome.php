@@ -55,7 +55,7 @@ if(isset($_SESSION["logged_in"])){
 
               <!-- e-Consultation-->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="facultychats.php">e-Consultation</a>
+                <a class="nav-link" aria-current="page" href="facultychats.php">Forum</a>
               </li>
 
               <!-- OTHER SERVICES -->
