@@ -55,7 +55,7 @@ if (isset($_SESSION["logged_in"])) {
                                     </li>
                                     <li>
                                         <a href="faculty.php" class="nav-link">
-                                            <span>Facutly</span></a>
+                                            <span>Faculty</span></a>
                                     </li>
                                     <li>
                                         <a href="admin.php" class="nav-link">
@@ -63,14 +63,14 @@ if (isset($_SESSION["logged_in"])) {
                                     </li>
                                     <li>
                                         <a href="admissionacc.php" class="nav-link">
-                                            <span>Admission Forms</span></a>
+                                            <span>Admissions</span></a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
                         <li>
                             <a href="admission.php" class="nav-link px-sm-0 px-2 text-truncate">
-                                <i class="fs-5 bi-files"></i><span class="ms-1 d-none d-sm-inline">Admission</span> </a>
+                                <i class="fs-5 bi-files"></i><span class="ms-1 d-none d-sm-inline">Admission Forms</span> </a>
                         </li>
                         <li>
                             <a href="admissionsched.php" class="nav-link px-sm-0 px-2 text-truncate">

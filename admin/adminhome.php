@@ -107,7 +107,7 @@ while ($row = $result->fetch_assoc()) {
                                     </li>
                                     <li>
                                         <a href="faculty.php" class="nav-link">
-                                            <span>Facutly</span></a>
+                                            <span>Faculty</span></a>
                                     </li>
                                     <li>
                                         <a href="admin.php" class="nav-link">
