@@ -83,14 +83,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <a class="nav-link" aria-current="page" href="parentpta.php">PTA</a>
               </li>
 
-              <!-- e-Consultation-->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                e-Consultation
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="parentconsult.php">Consult a Teacher</a></li>
-                </ul>
+              <!-- FORUM -->
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="parentconsult.php">Forum</a>
               </li>
 
               <!-- OTHER SERVICES -->
