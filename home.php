@@ -19,7 +19,7 @@
 
     <nav class="navbar bg-white">
         <div class="container-fluid d-flex justify-content-center">
-          <a class="navbar-brand mb-0 fs-3" href="home.html">Bayanan Elementary School Main</a>
+          <a class="navbar-brand mb-0 fs-3" href="home.php">Bayanan Elementary School Main</a>
         </div>
     </nav>
 
@@ -30,7 +30,7 @@
 
                 <!-- HOME -->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="home.html">Home</a>
+                <a class="nav-link" aria-current="page" href="home.php">Home</a>
               </li>
 
               <!-- ABOUT -->
@@ -133,7 +133,7 @@
 
       <!-- Facebook Page Plugin -->
       <div class="container mt-5">
-        <h2 class="text-center fw-bold mb-5">NEWS AND ANNOUNCEMENTS</h2>
+        <h2 class="text-center fw-bold mb-5">NEWS</h2>
         <!-- Facebook SDK -->
         <div id="fb-root"></div>
         <script async defer crossorigin="anonymous" 
@@ -193,49 +193,60 @@
 
       </div>
 
-      <!-- Upcoming Events -->
+      <!-- ANNOUNCEMENTS -->
       <div class="container mt-5">
-        <h2 class="text-center fw-bold mb-5">UPCOMING EVENTS</h2>
-        <div class="row d-flex justify-content-center">
-            <!-- Event Card 1 -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Science Month</h5>
-                        <p class="card-text">Celebrate science throughout September with fun activities and competitions.</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Event Card 2 -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Teacher's Day</h5>
-                        <p class="card-text">Join us on October 5th to appreciate and celebrate our teachers!</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Event Card 3 -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">English Month</h5>
-                        <p class="card-text">November is all about the English language with exciting contests and programs.</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Event Card 4 -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Nestle Wellness Campus Program</h5>
-                        <p class="card-text">Promoting health and wellness with Nestle's engaging program.</p>
-                    </div>
-                </div>
-            </div>
+        <h2 class="text-center fw-bold mb-3">ANNOUNCEMENTS</h2>
+        <div class="border p-3" style="height: 300px; overflow-y: auto;">
+            <?php
+            require("server/connection.php"); // Ensure this path is correct
+
+            $query = "SELECT postitle, postdesc, dateposted FROM announcements ORDER BY id DESC";
+            $result = mysqli_query($connection, $query);
+
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<div class='mb-3'>";
+                    echo "<h5 class='fw-bold'>" . htmlspecialchars($row["postitle"]) . "</h5>";
+                    echo "<p>" . htmlspecialchars($row["postdesc"]) . "</p>";
+                    echo "<small class='text-muted'>" . date("F d, Y", strtotime($row["dateposted"])) . "</small>";
+                    echo "<hr>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<p class='text-muted'>No announcements available.</p>";
+            }
+            ?>
         </div>
+    </div>
+
+      <div class="d-flex align-items-center justify-content-center bg-image p-5 text-center text-white" style="background-image: url('img/arrow1.png');
+      background-repeat: no-repeat; background-position: center; background-size: cover;">
+
       </div>
 
+      <!-- Upcoming Events -->
+      <div class="container mt-5">
+        <h2 class="text-center fw-bold mb-3">UPCOMING EVENTS</h2>
+        <div class="border p-3" style="height: 300px; overflow-y: auto;">
+            <?php
+            $query = "SELECT postitle, postdesc, dateposted FROM events ORDER BY id DESC";
+            $result = mysqli_query($connection, $query);
+
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<div class='mb-3'>";
+                    echo "<h5 class='fw-bold'>" . htmlspecialchars($row["postitle"]) . "</h5>";
+                    echo "<p>" . htmlspecialchars($row["postdesc"]) . "</p>";
+                    echo "<small class='text-muted'>" . date("F d, Y", strtotime($row["dateposted"])) . "</small>";
+                    echo "<hr>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<p class='text-muted'>No upcoming events.</p>";
+            }
+            ?>
+        </div>
+    </div>
 
       <hr>
       <footer>

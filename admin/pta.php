@@ -208,7 +208,7 @@ if (isset($_SESSION["logged_in"])) {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to delete this grade assignment?
+                            Are you sure you want to delete this PTA announcement?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -223,7 +223,7 @@ if (isset($_SESSION["logged_in"])) {
                 <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="d-flex">
                         <div class="toast-body" id="toastMessage">
-                            Class assignment added successfully!
+                            PTA Post added successfully!
                         </div>
                         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>

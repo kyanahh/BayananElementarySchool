@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <nav class="navbar bg-white">
         <div class="container-fluid d-flex justify-content-center">
-          <a class="navbar-brand mb-0 fs-3" href="home.html">Bayanan Elementary School Main</a>
+          <a class="navbar-brand mb-0 fs-3" href="home.php">Bayanan Elementary School Main</a>
         </div>
     </nav>
 
@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <!-- HOME -->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="home.html">Home</a>
+                <a class="nav-link" aria-current="page" href="home.php">Home</a>
               </li>
 
               <!-- ABOUT -->
