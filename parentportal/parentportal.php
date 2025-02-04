@@ -39,6 +39,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         $_SESSION["address"] = $record["address"];
         $_SESSION["curriculum"] = $record["curriculum"];
         $_SESSION["usertypename"] = $record["usertypename"];
+        $_SESSION["usertypeid"] = $row["usertypeid"]; // Ensure this is set after login
         $_SESSION["logged_in"] = true;
 
         $userid = $record["userid"];
