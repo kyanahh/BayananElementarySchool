@@ -42,7 +42,7 @@
                   <li><a class="dropdown-item" href="visionmission.html">Vision and Mission</a></li>
                   <li><a class="dropdown-item" href="history.html">History</a></li>
                   <li><a class="dropdown-item" href="contacts.php">Contacts and Directory</a></li>
-                  <li><a class="dropdown-item" href="#">Organizational Chart</a></li>
+                  <li><a class="dropdown-item" href="orgchart.html">Organizational Chart</a></li>
                 </ul>
               </li>
 

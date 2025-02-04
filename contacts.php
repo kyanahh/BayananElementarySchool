@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <li><a class="dropdown-item" href="visionmission.html">Vision and Mission</a></li>
                   <li><a class="dropdown-item" href="history.html">History</a></li>
                   <li><a class="dropdown-item" href="contacts.php">Contacts and Directory</a></li>
-                  <li><a class="dropdown-item" href="#">Organizational Chart</a></li>
+                  <li><a class="dropdown-item" href="orgchart.html">Organizational Chart</a></li>
                 </ul>
               </li>
 
@@ -164,7 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h3 class="fw-bold text-white ms-5">Contacts and Directory</h3>
                 <ol class="breadcrumb ms-5">
                     <li class="breadcrumb-item fw-bold">
-                        <a href="home.html" class="text-decoration-none text-white">Home</a>
+                        <a href="home.php" class="text-decoration-none text-white">Home</a>
                     </li>
                     <li class="breadcrumb-item active text-white fw-bold" aria-current="page">Contacts and Directory</li>
                 </ol>
