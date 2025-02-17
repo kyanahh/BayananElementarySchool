@@ -54,7 +54,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Facilities</a></li>
                   <li><a class="dropdown-item" href="hymn.html">BESMAIN Hymn</a></li>
-                  <li><a class="dropdown-item" href="clubs.html">Sports Clubs & Activities</a></li>
+                  <li><a class="dropdown-item" href="clubs.html">Sports & Activities</a></li>
                   <li><a class="dropdown-item" href="achievements.html">BESMAIN Achievements</a></li>
                 </ul>
               </li>
