@@ -71,6 +71,16 @@ if(isset($_SESSION["logged_in"])){
                 </ul>
               </li>
 
+              <!-- EXTRA CURRICULAR -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Extra Curricular
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="sports.php">Sports</a></li>
+                </ul>
+              </li>
+
               <!-- OTHER SERVICES -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
