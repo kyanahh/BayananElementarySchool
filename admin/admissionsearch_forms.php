@@ -37,19 +37,6 @@ if (isset($_POST['query'])) {
             echo '<td>' . date('M d, Y', strtotime($row['birthdate'])) . '</td>';
             echo '<td>';
             echo '<div class="d-flex justify-content-center">';
-            $appformid = $row['appformid']; 
-
-                // Check if this appformid exists in the 'appsched' table
-                $schedCheck = $connection->query("SELECT COUNT(*) as count FROM appsched WHERE appformid = $appformid");
-                $schedCheckResult = $schedCheck->fetch_assoc();
-
-                // If no schedule exists, show the "Add Exam Schedule" button
-                if ($schedCheckResult['count'] == 0) {
-                    echo '<button class="btn btn-warning me-2" onclick="addSchedule(' . $appformid . ')">Add Exam Schedule</button>';
-                } else {
-                    // If schedule exists, show the "View Exam Schedule" button
-                    echo '<button class="btn btn-dark me-2" onclick="viewExamSched(' . $appformid . ')">Exam Schedule</button>';
-                }
             echo '<button class="btn btn-info me-2" onclick="viewAdmission(' . $row['appformid'] . ')">View</button>';
             echo '<button class="btn btn-danger" onclick="deleteAdmission(' . $row['appformid'] . ')">Delete</button>';
             echo '</div>';

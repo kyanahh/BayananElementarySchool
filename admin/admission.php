@@ -134,7 +134,7 @@ if (isset($_SESSION["logged_in"])) {
                 <!-- List of Admission Details-->
                 <div class="px-3">
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <h2 class="fs-5 mt-1 ms-2">Admission Forms</h2>
                         </div>
                         <div class="col input-group mb-3 ms-4">
@@ -154,13 +154,14 @@ if (isset($_SESSION["logged_in"])) {
                                             <th scope="col">First</th>
                                             <th scope="col">Last</th>
                                             <th scope="col">Birthday</th>
+                                            <th scope="col">Status</th>
                                             <th scope="col" class="text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
                                     <?php
-                                        // Query the database to fetch user data
-                                        $result = $connection->query("SELECT applicationform.*, admission.addid 
+                                        // Query the database to fetch user data including the necessary fields (pic, psa, reportcard, kinder)
+                                        $result = $connection->query("SELECT applicationform.*, admission.addid, applicationform.pic, applicationform.psa, applicationform.reportcard, applicationform.kinder
                                         FROM applicationform INNER JOIN admission
                                         ON applicationform.addid = admission.addid 
                                         ORDER BY appformid DESC");
@@ -169,6 +170,16 @@ if (isset($_SESSION["logged_in"])) {
                                             $count = 1; 
 
                                             while ($row = $result->fetch_assoc()) {
+                                                // Check if pic, psa, reportcard, kinder are empty
+                                                if (empty($row['pic']) || empty($row['psa']) || empty($row['reportcard']) || empty($row['kinder'])) {
+                                                    $appstatus = "Incomplete requirements";
+                                                } else {
+                                                    $appstatus = "Complete Requirements";
+                                                    // Update the appstatus to "Complete Requirements" in the database if all fields are filled
+                                                    $update_status_query = "UPDATE applicationform SET appstatus = 'Complete Requirements' WHERE appformid = " . $row['appformid'];
+                                                    $connection->query($update_status_query);
+                                                }
+
                                                 echo '<tr>';
                                                 echo '<td>' . $count . '</td>';
                                                 echo '<td>' . $row['addid'] . '</td>';
@@ -176,22 +187,9 @@ if (isset($_SESSION["logged_in"])) {
                                                 echo '<td>' . $row['firstname'] . '</td>';
                                                 echo '<td>' . $row['lastname'] . '</td>';
                                                 echo '<td>' . date('M d, Y', strtotime($row['birthdate'])) . '</td>';
+                                                echo '<td>' . $appstatus . '</td>';
                                                 echo '<td>';
                                                 echo '<div class="d-flex justify-content-center">';
-                                                $appformid = $row['appformid']; 
-
-                                                    // Check if this appformid exists in the 'appsched' table
-                                                    $schedCheck = $connection->query("SELECT COUNT(*) as count FROM appsched WHERE appformid = $appformid");
-                                                    $schedCheckResult = $schedCheck->fetch_assoc();
-
-                                                    // If no schedule exists, show the "Add Exam Schedule" button
-                                                    if ($schedCheckResult['count'] == 0) {
-                                                        echo '<button class="btn btn-warning me-2" onclick="addSchedule(' . $appformid . ')">Add Exam Schedule</button>';
-                                                    } else {
-                                                        // If schedule exists, show the "View Exam Schedule" button
-                                                        echo '<button class="btn btn-dark me-2" onclick="viewExamSched(' . $appformid . ')">Exam Schedule</button>';
-                                                    }
-
                                                 echo '<button class="btn btn-info me-2" onclick="viewAdmission(' . $row['appformid'] . ')">View</button>';
                                                 echo '<button class="btn btn-danger" onclick="deleteAdmission(' . $row['appformid'] . ')">Delete</button>';
                                                 echo '</div>';
@@ -271,16 +269,6 @@ if (isset($_SESSION["logged_in"])) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-
-        //---------------------------Add Exam Sched---------------------------//
-        function addSchedule(appformid) {
-            window.location = "admissionaddsched.php?appformid=" + appformid;
-        }
-
-        //---------------------------View Exam Sched---------------------------//
-        function viewExamSched(appformid) {
-            window.location = "admissionviewsched.php?appformid=" + appformid;
-        }
 
         //---------------------------View Admission Form---------------------------//
         function viewAdmission(appformid) {

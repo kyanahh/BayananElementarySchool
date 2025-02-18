@@ -18,7 +18,7 @@ if (isset($_SESSION["logged_in"])) {
 }
 
 $postdesc = $postitle = "";
-$currentDate = date("Y-m-d"); 
+$currentDate = date("Y-m-d");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $postitle =  ucwords($_POST["postitle"]);

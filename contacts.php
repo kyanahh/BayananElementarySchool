@@ -4,14 +4,16 @@ require("server/connection.php");
 
 $errorMessage = $name = $email = $message = "";
 
+$currentDate = date("Y-m-d");
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $name = ucwords($_POST["name"]);
   $message = ucwords($_POST["message"]);
   $email = $_POST["email"];
 
   // Insert the user data into the database
-  $insertQuery = "INSERT INTO inquiry (fullname, email, messages) 
-  VALUES ('$name', '$email', '$message')";
+  $insertQuery = "INSERT INTO inquiry (fullname, email, messages, dateposted) 
+  VALUES ('$name', '$email', '$message', '$currentDate')";
   
   $result = $connection->query($insertQuery);
 

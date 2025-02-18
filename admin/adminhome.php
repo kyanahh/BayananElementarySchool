@@ -62,10 +62,10 @@ while ($row = $result->fetch_assoc()) {
     $data['civilstatus'][$row['civilstats']] = $row['total'];
 }
 
-// Total number of examiners per year (grouping by year from the examdate)
-$result = $connection->query("SELECT YEAR(examdate) AS exam_year, COUNT(*) AS total FROM appsched GROUP BY exam_year");
+// Total number of inquiries per year (grouping by year from the dateposted)
+$result = $connection->query("SELECT YEAR(dateposted) AS inquiry_year, COUNT(*) AS total FROM inquiry GROUP BY inquiry_year");
 while ($row = $result->fetch_assoc()) {
-    $data['examiners_per_year'][$row['exam_year']] = $row['total'];
+    $data['inquiries_per_year'][$row['inquiry_year']] = $row['total'];
 }
 
 ?>
@@ -218,8 +218,8 @@ while ($row = $result->fetch_assoc()) {
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Examiners per Year</h5>
-                                    <canvas id="examinersChart"></canvas>
+                                    <h5 class="card-title">Inquiries per Year</h5>
+                                    <canvas id="inquiriesChart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -281,7 +281,7 @@ while ($row = $result->fetch_assoc()) {
         datasets: [{
             label: 'Gender Distribution',
             data: <?= json_encode(array_values($data['gender'] ?? [])) ?>,
-            backgroundColor: ['#36A2EB', '#FF6384']
+            backgroundColor: ['#4CAF50', '#9C27B0']  // Updated colors
         }]
     };
 
@@ -322,19 +322,25 @@ while ($row = $result->fetch_assoc()) {
     };
 
     const civilStatusData = {
-        labels: <?= json_encode(array_keys($data['civil_status'] ?? [])) ?>,
+        labels: <?= json_encode(array_keys($data['civilstatus'] ?? [])) ?>,
         datasets: [{
             label: 'Civil Status Distribution',
-            data: <?= json_encode(array_values($data['civil_status'] ?? [])) ?>,
-            backgroundColor: '#FFD700'
+            data: <?= json_encode(array_values($data['civilstatus'] ?? [])) ?>,
+            backgroundColor: [
+                '#FF6347', // Single
+                '#4682B4', // Married
+                '#32CD32', // Separated
+                '#FFD700', // Divorced
+                '#8A2BE2'  // Widowed
+            ]
         }]
     };
 
-    const examinersData = {
-        labels: <?= json_encode(array_keys($data['examiners_per_year'] ?? [])) ?>,
+    const inquiriesData = {
+        labels: <?= json_encode(array_keys($data['inquiries_per_year'] ?? [])) ?>,
         datasets: [{
-            label: 'Examiners per Year',
-            data: <?= json_encode(array_values($data['examiners_per_year'] ?? [])) ?>,
+            label: 'Inquiries per Year',
+            data: <?= json_encode(array_values($data['inquiries_per_year'] ?? [])) ?>,
             backgroundColor: '#8B0000'
         }]
     };
@@ -347,7 +353,7 @@ while ($row = $result->fetch_assoc()) {
     new Chart(document.getElementById('gradeChart'), { type: 'line', data: gradeData });
     new Chart(document.getElementById('applicationFormsChart'), { type: 'pie', data: applicationFormsData });
     new Chart(document.getElementById('civilStatusChart'), { type: 'doughnut', data: civilStatusData });
-    new Chart(document.getElementById('examinersChart'), { type: 'line', data: examinersData });
+    new Chart(document.getElementById('inquiriesChart'), { type: 'bar', data: inquiriesData });
     </script>
 
 </body>

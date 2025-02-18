@@ -18,19 +18,11 @@ if (isset($_SESSION["logged_in"])) {
     $textaccount = "Account";
 }
 
-$appstatus = 'Not Available';
-$examdate = 'Not Available';
-$examvenue = 'Not Available';
-$formattedExamDate = 'Not Available';
-$remarks = 'Not Available';
-$appformid = 'Not Available';
-
 $admissionData = [];
 $uploadedFiles = []; // To hold uploaded file statuses
 
-$query = "SELECT applicationform.*, appsched.* 
-            FROM applicationform INNER JOIN appsched 
-            ON applicationform.appformid = appsched.appformid 
+$query = "SELECT applicationform.*  
+            FROM applicationform 
             WHERE addid = ?";
 $stmt = $connection->prepare($query);
 $stmt->bind_param("i", $addid);
@@ -42,13 +34,34 @@ if ($result && $result->num_rows > 0) {
     $row = $admissionData[0]; // Use the first record
     
     $appformid = $row['appformid'];
-    $appstatus = $row['appstatus'];
-    $examdate = $row['examdate'];
-    $formattedExamDate = (new DateTime($examdate))->format('F j, Y');
-    $examvenue = $row['examvenue'];
-    $remarks = $row['remarks'];
+    // Check if all requirements are uploaded
+    $allRequirementsUploaded = true;
+    foreach (['pic', 'psa', 'reportcard', 'kinder'] as $requirement) {
+        if (empty($row[$requirement])) {
+            $allRequirementsUploaded = false;
+            $missingRequirements[] = $requirement; // Track which ones are missing
+        }
+    }
 
-    foreach (['pic', 'psa', 'reportcard', 'goodmoral', 'validid', 'residence', 'kinder'] as $requirement) {
+    // Update appstatus based on whether all requirements are uploaded
+    if ($allRequirementsUploaded) {
+        $appstatus = "Complete Requirements";
+    } else {
+        $appstatus = "Incomplete Requirements";
+    }
+
+    // Update the appstatus in the database if it's changed
+    if ($appstatus !== $row['appstatus']) {
+        $updateStatusQuery = "UPDATE applicationform SET appstatus = ? WHERE addid = ?";
+        $updateStatusStmt = $connection->prepare($updateStatusQuery);
+        $updateStatusStmt->bind_param("si", $appstatus, $addid);
+        $updateStatusStmt->execute();
+    }
+
+    // Remarks logic based on uploaded requirements
+    $remarks = $allRequirementsUploaded ? "All requirements completed." : "Please complete requirements to proceed with the admission";
+
+    foreach (['pic', 'psa', 'reportcard', 'kinder'] as $requirement) {
         if (!empty($row[$requirement])) {
             $uploadedFiles[$requirement] = true;
         }
@@ -159,14 +172,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="border py-3 px-3">
                         <p class="fw-bold">Application Status: 
                         <br><span class="fw-bold"><?php echo $appstatus ?></span></p>
-                        <hr>
                         <p class="fw-bold">Application No.: <br><span><?php echo $appformid ?></span></p>
-                        <p class="fw-bold">Examination Date: <br><span class="fw-bold"><?php echo $formattedExamDate ?></span></p>
-                        <p class="fw-bold">Examination Venue: <br><span class="fw-bold"><?php echo $examvenue ?></span></p>
                         <hr>
-                        <p class="fw-bold">Reminders / Remarks: <?php echo $remarks ?></p>
-                        <p class="text-danger fw-bold">Please check the schedule of your exam which will be shown above.</p>
-                        <hr>
+                        <p class="fw-bold"><span class="text-danger">Remarks:</span>
+                        <br><?php echo $remarks ?></p>
                         <div class="d-flex justify-content-center">
                             <?php if (!empty($appformid)) : ?>
                                 <form method="POST" action="generate_pdf.php">

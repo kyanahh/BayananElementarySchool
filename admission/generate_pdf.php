@@ -6,10 +6,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["appformid"])) {
     $appformid = $_POST["appformid"];
 
     // Fetch data from the database
-    $query = "SELECT applicationform.*, appsched.* 
+    $query = "SELECT applicationform.*
               FROM applicationform 
-              INNER JOIN appsched ON applicationform.appformid = appsched.appformid 
-              WHERE applicationform.appformid = ?";
+              WHERE appformid = ?";
     $stmt = $connection->prepare($query);
     $stmt->bind_param("i", $appformid);
     $stmt->execute();
@@ -28,9 +27,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["appformid"])) {
         $prevschool = $row["prevschool"];
         $prevschooladdress = $row["prevschooladdress"];
         $appstatus = $row["appstatus"];
-        $examdate = (new DateTime($row["examdate"]))->format("F j, Y");
-        $examvenue = $row["examvenue"];
-        $remarks = $row["remarks"];
 
         // Create PDF
         $pdf = new TCPDF();
@@ -57,9 +53,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["appformid"])) {
 
         <h3>Application Details</h3>
         <p><strong>Application Status:</strong> $appstatus</p>
-        <p><strong>Examination Date:</strong> $examdate</p>
-        <p><strong>Examination Venue:</strong> $examvenue</p>
-        <p><strong>Remarks:</strong> $remarks</p>
         ";
 
         $pdf->writeHTML($html, true, false, true, false, '');

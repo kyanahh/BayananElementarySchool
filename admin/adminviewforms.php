@@ -51,9 +51,6 @@ if ($appID > 0) {
         $pic = $data['pic'];
         $psa = $data['psa'];
         $reportcard = $data['reportcard'];
-        $goodmoral = $data['goodmoral'];
-        $validid = $data['validid'];
-        $residence = $data['residence'];
         $kinder = $data['kinder'];
     } else {
         $errorMessage = "Admission information not found.";
@@ -325,43 +322,7 @@ if ($appID > 0) {
                                 ?>
                             </div>
                             <div class="col-sm-2">
-                                <label class="form-label">Good Moral</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <?php
-                                    if ($goodmoral) {
-                                        echo "<a href='data:".$goodmoral."' download='goodmoral.pdf' class='btn btn-primary'>Download</a>";
-                                    }
-                                ?>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 mt-2 align-items-center">
-                            <div class="col-sm-2">
-                                <label class="form-label">Parent's/Guardian's Valid ID</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <?php
-                                    if ($validid) {
-                                        echo "<a href='data:".$validid."' download='validid.pdf' class='btn btn-primary'>Download</a>";
-                                    }
-                                ?>
-                            </div>
-                            <div class="col-sm-2">
-                                <label class="form-label">Proof of Residence</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <?php
-                                    if ($residence) {
-                                        echo "<a href='data:".$residence."' download='residence.pdf' class='btn btn-primary'>Download</a>";
-                                    }
-                                ?>     
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 mt-2 align-items-center">
-                            <div class="col-sm-2">
-                                <label class="form-label">Kindergarten COC</label>
+                                <label class="form-label">ECCD Card</label>
                             </div>
                             <div class="col-sm-4">
                                 <?php
@@ -371,7 +332,9 @@ if ($appID > 0) {
                                 ?>
                             </div>
                         </div>
-
+                        <div class="d-flex justify-content-end">
+                            <a href="admission.php" class="btn btn-danger">Back</a>
+                        </div>
                         
                         </div>
                     </form>
