@@ -44,18 +44,44 @@ $assigneddate = date("Y-m-d H:i:s");
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sectionid = $_POST["sectionid"];
 
-    // Insert the section data into the database
-    $insertQuery = "INSERT INTO class_section_assignments (applicationid, sectionid, assignmentdate, assignedby) 
-    VALUES ($applicationid, $sectionid, '$assigneddate', '$usersid')";
-    $result = $connection->query($insertQuery);
+    // Start a transaction to ensure data consistency
+    $connection->begin_transaction();
 
-    if ($result) {
-        // Set a session variable for success
-        $_SESSION['update_success'] = true;
-        header("Location: grade_classassignment.php"); 
-        exit;
-    } else {
-        $errorMessage = "Error adding details: " . $connection->error;
+    try {
+        // Insert the section data into the class_section_assignments table
+        $insertQuery = "INSERT INTO class_section_assignments (applicationid, sectionid, assignmentdate, assignedby) 
+        VALUES ($applicationid, $sectionid, '$assigneddate', '$usersid')";
+        $result = $connection->query($insertQuery);
+
+        if ($result) {
+            // Update the application status to 'Enrolled'
+            $updateQuery = "UPDATE enrollment_applications 
+                            SET application_status = 'Enrolled' 
+                            WHERE applicationid = '$applicationid'";
+            $updateResult = $connection->query($updateQuery);
+
+            if ($updateResult) {
+                // Commit the transaction if both queries are successful
+                $connection->commit();
+
+                // Set a session variable for success and redirect
+                $_SESSION['update_success'] = true;
+                header("Location: grade_classassignment.php"); 
+                exit;
+            } else {
+                // Rollback if the status update fails
+                $connection->rollback();
+                $errorMessage = "Error updating application status: " . $connection->error;
+            }
+        } else {
+            // Rollback if the class assignment insertion fails
+            $connection->rollback();
+            $errorMessage = "Error adding class assignment: " . $connection->error;
+        }
+    } catch (Exception $e) {
+        // Rollback in case of any exception
+        $connection->rollback();
+        $errorMessage = "Error: " . $e->getMessage();
     }
 }
 

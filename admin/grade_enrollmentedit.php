@@ -261,6 +261,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <option value="Pending" <?php echo ($application_status == 'Pending') ? 'selected' : ''; ?>>Pending</option>
                                     <option value="Approved" <?php echo ($application_status == 'Approved') ? 'selected' : ''; ?>>Approved</option>
                                     <option value="Rejected" <?php echo ($application_status == 'Rejected') ? 'selected' : ''; ?>>Rejected</option>
+                                    <option value="Dropped" <?php echo ($application_status == 'Dropped') ? 'selected' : ''; ?>>Dropped</option>
                                 </select>                            
                             </div>
                         </div>

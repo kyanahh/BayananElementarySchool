@@ -130,7 +130,7 @@ if (isset($_SESSION["logged_in"])) {
                 <!-- List of Class Assignment -->
                 <div class="px-3 pt-4">
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <h2 class="fs-5 mt-1 ms-2">Class Assignment</h2>
                         </div>
                         <div class="col input-group mb-3 ms-4">

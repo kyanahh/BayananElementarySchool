@@ -84,7 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   Enrollment Services
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="enrollment.php">Online Enrollment</a></li>
                   <li><a class="dropdown-item" href="enrollmentstatus.php">Enrollment Status</a></li>
                 </ul>
               </li>

@@ -51,10 +51,9 @@ if(isset($_SESSION["logged_in"])){
               <!-- ENROLLMENT SERVICES -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Enrollment Services
+              Enrollment Services
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="enrollment.php">Online Enrollment</a></li>
                   <li><a class="dropdown-item" href="enrollmentstatus.php">Enrollment Status</a></li>
                 </ul>
               </li>
@@ -62,7 +61,7 @@ if(isset($_SESSION["logged_in"])){
               <!-- OTHER SERVICES -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Other Services
+                Other Services
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="studentaccmgt.php">Account Management</a></li>
@@ -183,8 +182,6 @@ if(isset($_SESSION["logged_in"])){
         <h2 class="text-center fw-bold mb-3">ANNOUNCEMENTS</h2>
         <div class="border p-3" style="height: 300px; overflow-y: auto;">
             <?php
-            require("server/connection.php"); // Ensure this path is correct
-
             $query = "SELECT postitle, postdesc, dateposted FROM announcements ORDER BY id DESC";
             $result = mysqli_query($connection, $query);
 

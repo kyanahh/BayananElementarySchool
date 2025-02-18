@@ -29,7 +29,7 @@ if (isset($userid) && !empty($userid)) {
         LEFT JOIN class_section_assignments ON class_section_assignments.applicationid = enrollment_applications.applicationid
         LEFT JOIN class_sections ON class_section_assignments.sectionid = class_sections.section_id
         WHERE enrollment_applications.studentid = ? 
-        ORDER BY FIELD(enrollment_applications.application_status, 'Approved') DESC, 
+        ORDER BY FIELD(enrollment_applications.application_status, 'Enrolled') DESC, 
                  enrollment_applications.appdate DESC
         LIMIT 1
     ");
@@ -48,7 +48,7 @@ if (isset($userid) && !empty($userid)) {
     }
 
     // Only fetch subjects if the application is approved
-    if ($application_status == "Approved") {
+    if ($application_status == "Enrolled") {
         $subjectStmt = $connection->prepare("
             SELECT DISTINCT subjects.subject_name
             FROM subjects
@@ -107,7 +107,6 @@ if (isset($userid) && !empty($userid)) {
                   Enrollment Services
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="enrollment.php">Online Enrollment</a></li>
                   <li><a class="dropdown-item" href="enrollmentstatus.php">Enrollment Status</a></li>
                 </ul>
               </li>
@@ -147,7 +146,7 @@ if (isset($userid) && !empty($userid)) {
                         <form method="POST" action="<?php htmlspecialchars("SELF_PHP"); ?>">
 
                         <?php if (!empty($errorMessage)): ?>
-                            <div class="alert alert-danger">
+                            <div class="alert alert-danger col-sm-10">
                                 <?php echo htmlspecialchars($errorMessage); ?>
                             </div>
                         <?php endif; ?>
@@ -209,7 +208,7 @@ if (isset($userid) && !empty($userid)) {
                                     </thead>
                                     <tbody class="table-group-divider">
                                         <?php
-                                        if ($application_status == "Approved" && count($subjects) > 0) {
+                                        if ($application_status == "Enrolled" && count($subjects) > 0) {
                                             foreach ($subjects as $index => $subject) {
                                                 echo "<tr><td>" . ($index + 1) . "</td><td>" . $subject . "</td></tr>";
                                             }

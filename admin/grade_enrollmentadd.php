@@ -21,7 +21,7 @@ $studentid = $gradeid = $application_status = $remarks = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $studentid = $_POST["studentid"];
     $gradeid = $_POST["gradeid"];
-    $application_status = "Pending";
+    $application_status = "Approved";
     $remarks = $_POST["remarks"];
 
     // Get the current date and time
