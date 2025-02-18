@@ -81,6 +81,11 @@ if(isset($_SESSION["logged_in"])){
                 </ul>
               </li>
 
+              <!-- e-Consultation -->
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="consultation.php">e-Consultation</a>
+              </li>
+
               <!-- OTHER SERVICES -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
