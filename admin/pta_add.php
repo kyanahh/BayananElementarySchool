@@ -130,6 +130,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <i class="fs-5 bi-calendar-event"></i><span class="ms-1 d-none d-sm-inline">Upcoming Events</span> </a>
                         </li>
                         <li>
+                            <a href="sports.php" class="nav-link px-sm-0 px-2 text-truncate">
+                                <i class="fs-5 bi-person-arms-up"></i><span class="ms-1 d-none d-sm-inline">Sports Membership</span> </a>
+                        </li>
+                        <li>
                             <a href="inquiry.php" class="nav-link px-sm-0 px-2 text-truncate">
                                 <i class="fs-5 bi-info-circle"></i><span class="ms-1 d-none d-sm-inline">Inquiries</span> </a>
                         </li>
