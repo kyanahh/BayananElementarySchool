@@ -235,7 +235,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <label class="form-label">Adviser<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="adviser" id="adviser" value="<?php echo $adviser; ?>" placeholder="Enter Adviser Name" required>
+                                <select class="form-control" name="adviser" id="adviser" required>
+                                    <option value="" disabled selected>Select Adviser</option>
+                                    <?php
+                                    // Query to get all faculty members
+                                    $sql = "SELECT userid, CONCAT(firstname, ' ', lastname) AS full_name FROM users WHERE usertypeid = 2";
+                                    $result = $connection->query($sql);
+
+                                    // Check if there are any faculty members and populate the dropdown
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo '<option value="' . $row['userid'] . '">' . $row['full_name'] . '</option>';
+                                        }
+                                    } else {
+                                        echo '<option value="" disabled>No Faculty Found</option>';
+                                    }
+                                    ?>
+                                </select>
                             </div>
                         </div>
 

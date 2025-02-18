@@ -23,7 +23,8 @@ if (isset($userid) && !empty($userid)) {
     $stmt = $connection->prepare("
         SELECT enrollment_applications.*, 
                grade_levels.grade_name, 
-               class_sections.section_name
+               class_sections.section_name, 
+               class_sections.adviser
         FROM enrollment_applications 
         INNER JOIN grade_levels ON enrollment_applications.gradeid = grade_levels.grade_id
         LEFT JOIN class_section_assignments ON class_section_assignments.applicationid = enrollment_applications.applicationid
@@ -43,6 +44,7 @@ if (isset($userid) && !empty($userid)) {
         $application_status = $row["application_status"];
         $grade_name = $row["grade_name"];
         $section_name = $row["section_name"] ?? "N/A";
+        $adviser = $row["adviser"] ?? "N/A";
     } else {
         $errorMessage = "Enrollment Status not found.";
     }
@@ -194,6 +196,15 @@ if (isset($userid) && !empty($userid)) {
                                 </div>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" name="section_name" id="section_name" value="<?php echo $section_name; ?>" disabled>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3 mt-2 align-items-center">
+                                <div class="col-sm-4">
+                                    <label class="form-label text-white fw-bold">Adviser</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="adviser" id="adviser" value="<?php echo $adviser; ?>" disabled>
                                 </div>
                             </div>
 

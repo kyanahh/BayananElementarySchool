@@ -158,35 +158,46 @@ if (isset($_SESSION["logged_in"])) {
                                         </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
-                                    <?php
-                                        // Query the database to fetch user data
-                                        $result = $connection->query("SELECT grade_levels.grade_name, class_sections.* 
-                                        FROM grade_levels INNER JOIN class_sections 
-                                        ON grade_levels.grade_id = class_sections.grade_id
-                                        ORDER BY grade_id ASC");
+                                        <?php
+                                            // Query the database to fetch user data with LEFT JOIN to allow NULL adviser values
+                                            $result = $connection->query("SELECT grade_levels.grade_name, class_sections.*, 
+                                                                        users.firstname, users.lastname  
+                                                                        FROM ((grade_levels 
+                                                                        INNER JOIN class_sections 
+                                                                            ON grade_levels.grade_id = class_sections.grade_id) 
+                                                                        LEFT JOIN users 
+                                                                            ON class_sections.adviser = users.userid) 
+                                                                        ORDER BY grade_id ASC");
 
-                                        if ($result->num_rows > 0) {
-                                            $count = 1; 
+                                            if ($result->num_rows > 0) {
+                                                $count = 1; 
 
-                                            while ($row = $result->fetch_assoc()) {
-                                                echo '<tr>';
-                                                echo '<td>' . $count . '</td>';
-                                                echo '<td>' . $row['grade_name'] . '</td>';
-                                                echo '<td>' . $row['section_name'] . '</td>';
-                                                echo '<td>' . $row['adviser'] . '</td>';
-                                                echo '<td>';
-                                                echo '<div class="d-flex justify-content-center">';
-                                                echo '<button class="btn btn-primary me-2" onclick="editSection(' . $row['section_id'] . ')">Edit</button>';
-                                                echo '<button class="btn btn-danger" onclick="deleteSection(' . $row['section_id'] . ')">Delete</button>';
-                                                echo '</div>';
-                                                echo '</td>';
-                                                echo '</tr>';
-                                                $count++; 
+                                                while ($row = $result->fetch_assoc()) {
+                                                    echo '<tr>';
+                                                    echo '<td>' . $count . '</td>';
+                                                    echo '<td>' . $row['grade_name'] . '</td>';
+                                                    echo '<td>' . $row['section_name'] . '</td>';
+                                                    
+                                                    // Check if adviser is available
+                                                    if ($row['firstname'] && $row['lastname']) {
+                                                        echo '<td>' . $row['firstname'] . ' ' . $row['lastname'] . '</td>';
+                                                    } else {
+                                                        echo '<td>None</td>'; // If no adviser, display 'None'
+                                                    }
+
+                                                    echo '<td>';
+                                                    echo '<div class="d-flex justify-content-center">';
+                                                    echo '<button class="btn btn-primary me-2" onclick="editSection(' . $row['section_id'] . ')">Edit</button>';
+                                                    echo '<button class="btn btn-danger" onclick="deleteSection(' . $row['section_id'] . ')">Delete</button>';
+                                                    echo '</div>';
+                                                    echo '</td>';
+                                                    echo '</tr>';
+                                                    $count++; 
+                                                }
+                                            } else {
+                                                echo '<tr><td colspan="5">No section found.</td></tr>';
                                             }
-                                        } else {
-                                            echo '<tr><td colspan="5">No section found.</td></tr>';
-                                        }
-                                    ?>
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
