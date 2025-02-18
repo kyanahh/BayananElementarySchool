@@ -133,6 +133,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="events.php" class="nav-link px-sm-0 px-2 text-truncate">
                                 <i class="fs-5 bi-calendar-event"></i><span class="ms-1 d-none d-sm-inline">Upcoming Events</span> </a>
                         </li>
+                        <li>
+                            <a href="inquiry.php" class="nav-link px-sm-0 px-2 text-truncate">
+                                <i class="fs-5 bi-info-circle"></i><span class="ms-1 d-none d-sm-inline">Inquiries</span> </a>
+                        </li>
                     </ul>
                     <div class="dropup py-sm-4 py-1 mt-sm-auto ms-auto ms-sm-0 flex-shrink-1">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">

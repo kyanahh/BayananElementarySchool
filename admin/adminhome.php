@@ -161,6 +161,10 @@ while ($row = $result->fetch_assoc()) {
                             <a href="events.php" class="nav-link px-sm-0 px-2 text-truncate">
                                 <i class="fs-5 bi-calendar-event"></i><span class="ms-1 d-none d-sm-inline">Upcoming Events</span> </a>
                         </li>
+                        <li>
+                            <a href="inquiry.php" class="nav-link px-sm-0 px-2 text-truncate">
+                                <i class="fs-5 bi-info-circle"></i><span class="ms-1 d-none d-sm-inline">Inquiries</span> </a>
+                        </li>
                     </ul>
                     <div class="dropup py-sm-4 py-1 mt-sm-auto ms-auto ms-sm-0 flex-shrink-1">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -180,39 +184,76 @@ while ($row = $result->fetch_assoc()) {
             <div class="col offset-2 offset-sm-3 offset-xl-2 d-flex flex-column vh-100">
                 <div class="container mt-4">
                     <h3 class="fw-bold">School Analytics Dashboard</h3>
-                    <div class="row mt-4 mx-5">
-                        <div class="col-md-6">
-                            <canvas id="usertypeChart"></canvas>
-                        </div>
-                        <div class="col-md-6">
-                            <canvas id="genderChart"></canvas>
-                        </div>
-                    </div>
+                    
+                    <!-- Row 1 -->
                     <div class="row mt-4">
                         <div class="col-md-6">
-                            <canvas id="statusChart"></canvas>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Students per Section</h5>
+                                    <canvas id="sectionChart"></canvas>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <canvas id="sectionChart"></canvas>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Students per Grade Level</h5>
+                                    <canvas id="gradeChart"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- Row 2 -->
                     <div class="row mt-4">
                         <div class="col-md-6">
-                            <canvas id="gradeChart"></canvas>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Application Status</h5>
+                                    <canvas id="statusChart"></canvas>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <canvas id="examinersChart"></canvas>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Examiners per Year</h5>
+                                    <canvas id="examinersChart"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- Row 3 -->
                     <div class="row mt-4">
-                        <div class="col-md-6">
-                            <canvas id="applicationFormsChart"></canvas>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">User Type</h5>
+                                    <canvas id="usertypeChart"></canvas>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <canvas id="civilStatusChart"></canvas>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Gender Distribution</h5>
+                                    <canvas id="genderChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Civil Status</h5>
+                                    <canvas id="civilStatusChart"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
 
         </div>
