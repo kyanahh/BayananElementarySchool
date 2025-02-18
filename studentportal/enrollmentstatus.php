@@ -24,11 +24,12 @@ if (isset($userid) && !empty($userid)) {
         SELECT enrollment_applications.*, 
                grade_levels.grade_name, 
                class_sections.section_name, 
-               class_sections.adviser
+               users.firstname, users.lastname 
         FROM enrollment_applications 
         INNER JOIN grade_levels ON enrollment_applications.gradeid = grade_levels.grade_id
         LEFT JOIN class_section_assignments ON class_section_assignments.applicationid = enrollment_applications.applicationid
         LEFT JOIN class_sections ON class_section_assignments.sectionid = class_sections.section_id
+        LEFT JOIN users ON class_sections.adviser = users.userid 
         WHERE enrollment_applications.studentid = ? 
         ORDER BY FIELD(enrollment_applications.application_status, 'Enrolled') DESC, 
                  enrollment_applications.appdate DESC
@@ -44,7 +45,8 @@ if (isset($userid) && !empty($userid)) {
         $application_status = $row["application_status"];
         $grade_name = $row["grade_name"];
         $section_name = $row["section_name"] ?? "N/A";
-        $adviser = $row["adviser"] ?? "N/A";
+        $adviser = ($row["firstname"] ?? "") . " " . ($row["lastname"] ?? "");
+        $adviser = trim($adviser) ?: "N/A";
     } else {
         $errorMessage = "Enrollment Status not found.";
     }
