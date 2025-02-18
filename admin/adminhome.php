@@ -124,10 +124,6 @@ while ($row = $result->fetch_assoc()) {
                             <a href="admission.php" class="nav-link px-sm-0 px-2 text-truncate">
                                 <i class="fs-5 bi-files"></i><span class="ms-1 d-none d-sm-inline">Admission Forms</span> </a>
                         </li>
-                        <li>
-                            <a href="admissionsched.php" class="nav-link px-sm-0 px-2 text-truncate">
-                                <i class="fs-5 bi-calendar-check"></i><span class="ms-1 d-none d-sm-inline">Admission Schedules</span> </a>
-                        </li>
                         <li class="nav-item">
                             <a href="#submenu2" class="nav-link px-sm-0 px-2" data-bs-toggle="collapse" data-bs-target="#submenu2">
                                 <i class="fs-5 bi-file-person"></i><span class="ms-1 d-none d-sm-inline">Enrollment <span class="bi-caret-down"></span></span>
