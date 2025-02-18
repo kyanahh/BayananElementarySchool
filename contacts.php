@@ -1,59 +1,28 @@
 <?php
 
-$errorMessage = "";
+require("server/connection.php");
 
-// Composer's autoload file
-require 'vendor/autoload.php'; // Adjust the path if necessary
-
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
-require 'PHPMailer/src/Exception.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
-
-// Create an instance of PHPMailer
-$mail = new PHPMailer(true);
-
-// Initialize variables
-$name = "";
-$email = "";
-$message = "";
+$errorMessage = $name = $email = $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get form data
-    $name = htmlspecialchars($_POST['name']);
-    $email = htmlspecialchars($_POST['email']);
-    $message = htmlspecialchars($_POST['message']);
+  $name = ucwords($_POST["name"]);
+  $message = ucwords($_POST["message"]);
+  $email = $_POST["email"];
 
-    try {
-        //Server settings
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP server
-        $mail->SMTPAuth = true;
-        $mail->Username = 'denbertcalago@gmail.com'; // Replace with your email
-        $mail->Password = 'oqoh dqni gljr avzu'; // Replace with your email password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
-        $mail->Port = 587;
+  // Insert the user data into the database
+  $insertQuery = "INSERT INTO inquiry (fullname, email, messages) 
+  VALUES ('$name', '$email', '$message')";
+  
+  $result = $connection->query($insertQuery);
 
-        //Recipients
-        $mail->setFrom($email, $name);
-        $mail->addAddress('denbertcalago@gmail.com', 'BESMAIN Website'); // Change as needed
-
-        //Content
-        $mail->isHTML(true);
-        $mail->Subject = 'Inquiry Form Submission';
-        $mail->Body = "<strong>Name:</strong> $name<br>
-                       <strong>Email:</strong> $email<br><br>
-                       <strong>Message:</strong><br>$message";
-
-        $mail->send();
-        $errorMessage = 'Message has been sent';
-    } catch (Exception $e) {
-        $errorMessage = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-    }
+  if (!$result) {
+      $errorMessage = "Invalid query: " . $connection->error;
+  } else {
+    $name = $email = $message = "";
+    $errorMessage = "Inquiry submitted successfully";
+  }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -201,15 +170,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <form action="<?php htmlspecialchars("SELF_PHP"); ?>" method="POST">
                   <div class="mb-3">
                       <label for="name" class="form-label">Name</label>
-                      <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" required>
+                      <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" value="<?php echo $name; ?>" required>
                   </div>
                   <div class="mb-3">
                       <label for="email" class="form-label">Email</label>
-                      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" required>
+                      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" value="<?php echo $email; ?>" required>
                   </div>
                   <div class="pb-3">
                       <label for="message" class="form-label">Message</label>
-                      <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter message here.." required></textarea>
+                      <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter message here.." value="<?php echo $message; ?>" required></textarea>
                       <p class="text-danger"><?php echo $errorMessage ?></p>
                   </div>
                   <button type="submit" class="btn btn-primary px-4">Submit</button>
