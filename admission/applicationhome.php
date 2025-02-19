@@ -163,8 +163,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container-fluid mt-5 pt-5 px-5 mb-5">
     <div class="row d-flex justify-content-center">
 
-        <div class="col-sm-4 me-2">
-            <div class="card">
+        <div class="col-sm-7">
+        <div class="card mb-3">
                 <div class="card-header fw-bold">
                     Status
                 </div>
@@ -189,9 +189,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-sm-7">
             <div class="card">
                 <div class="card-header fw-bold">
                     Requirements
