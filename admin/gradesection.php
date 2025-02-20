@@ -154,6 +154,7 @@ if (isset($_SESSION["logged_in"])) {
                                             <th scope="col">Grade Level</th>
                                             <th scope="col">Section Name</th>
                                             <th scope="col">Adviser</th>
+                                            <th scope="col">No. of Students Enrolled</th>
                                             <th scope="col" class="text-center">Action</th>
                                         </tr>
                                     </thead>
@@ -161,12 +162,16 @@ if (isset($_SESSION["logged_in"])) {
                                         <?php
                                             // Query the database to fetch user data with LEFT JOIN to allow NULL adviser values
                                             $result = $connection->query("SELECT grade_levels.grade_name, class_sections.*, 
-                                                                        users.firstname, users.lastname  
+                                                                            users.firstname, users.lastname, 
+                                                                            COUNT(class_section_assignments.assignmentid) AS student_count 
                                                                         FROM ((grade_levels 
                                                                         INNER JOIN class_sections 
                                                                             ON grade_levels.grade_id = class_sections.grade_id) 
                                                                         LEFT JOIN users 
                                                                             ON class_sections.adviser = users.userid) 
+                                                                        LEFT JOIN class_section_assignments 
+                                                                            ON class_sections.section_id = class_section_assignments.sectionid
+                                                                        GROUP BY class_sections.section_id
                                                                         ORDER BY grade_id ASC");
 
                                             if ($result->num_rows > 0) {
@@ -185,8 +190,10 @@ if (isset($_SESSION["logged_in"])) {
                                                         echo '<td>None</td>'; // If no adviser, display 'None'
                                                     }
 
+                                                    echo '<td>' . $row['student_count'] . '</td>'; // Display student count
                                                     echo '<td>';
                                                     echo '<div class="d-flex justify-content-center">';
+                                                    echo '<button class="btn btn-info me-2" onclick="View(' . $row['section_id'] . ')">View</button>';
                                                     echo '<button class="btn btn-primary me-2" onclick="editSection(' . $row['section_id'] . ')">Edit</button>';
                                                     echo '<button class="btn btn-danger" onclick="deleteSection(' . $row['section_id'] . ')">Delete</button>';
                                                     echo '</div>';
@@ -195,7 +202,7 @@ if (isset($_SESSION["logged_in"])) {
                                                     $count++; 
                                                 }
                                             } else {
-                                                echo '<tr><td colspan="5">No section found.</td></tr>';
+                                                echo '<tr><td colspan="6">No section found.</td></tr>';
                                             }
                                         ?>
                                     </tbody>
@@ -265,6 +272,10 @@ if (isset($_SESSION["logged_in"])) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        //---------------------------View Users---------------------------//
+        function View(section_id) {
+            window.location = "gradesectionview.php?section_id=" + section_id;
+        }
 
         //---------------------------Edit Section---------------------------//
         function editSection(section_id) {
